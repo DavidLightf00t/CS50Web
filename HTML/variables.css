@@ -1,0 +1,16 @@
+ul {
+  font-family: sans-serif;
+  font-size: 18px;
+  padding: 10px;
+}
+
+ul {
+  color: purple;
+}
+
+ol {
+  font-size: 14px;
+  color: purple;
+}
+
+/*# sourceMappingURL=variables.css.map */

@@ -1,0 +1,19 @@
+$color: purple;
+
+%message {
+    font-family: sans-serif;
+    font-size: 18px;
+    padding: 10px;
+}
+
+ul{
+    @extend %message;
+    color: $color
+}
+
+ol{
+    font-size: 14px;
+    color: $color;
+}
+
+
