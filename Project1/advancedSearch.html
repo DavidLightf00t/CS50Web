@@ -6,38 +6,68 @@
         <link rel="html" href="index.html"/>
     </head>
     <body>
-        <h4>Find pages with...</h4>
-        <div class="topFields">
-            <div class="inputFields">
-                <label for="as_q">all these words:</label>
-                <label for="as_epq">these exact words:</label>
-                <form id="as_q" name="as_q" method="get" action="https://www.google.com/search">
-                    <input type="search" name="as_q">
-                    <br></br>
-                </form>
-                <form id="as_epq" name="as_eqp" method="get" action="https://www.google.com/search?as_q">
-                    <input type="search" name="as_epq">
-                    <br></br>
-                </form>
-                <form method="get" action="https://www.google.com/search?as_q=&as_epq=">
-                    <input id="as_oq" name="as_oq" type="search" name="as_oq">
-                    <br></br>
-                </form>
-                <form id="as_eq" method="get" action="https://www.google.com/search?as_q=&as_epq=&as_oq=">
-                    <label for="as_eq">none of these words</label>
-                    <input type="search" name="as_eq">
-                    <br></br>
-                </form>
-                <form id="as_n" method="get" action="https://www.google.com/search?as_q=&as_epq=&as_oq=&as_eq="> 
-                    <label for="as_n">numbers from:</label>
-                    <input type="search" name="as_nlo">
-                    to
-                    <input type="search" name="as_nhi">
-                </form>
+        <div class="banner">
+            <header role="banner">
+                <img src="googleLogo.png" alt="googleLogo" height="30px">
+                <div class="redirectLinks">
+                    <a id="search" href="index.html">Search</a>
+                </div>
+            </header>
+        </div>
+
+        <div class="appbar">
+            <div class="heading">
+                <label>Advanced Search</label>
             </div>
         </div>
-        <div class="redirectLinks">
-            <a id="search" href="index.html">Search</a>
+
+        <div>
+            <label class="seperator"></label>
+        </div>
+        <div class="topFields">
+            <div class="inputFields">                
+                <form name="f" method="get" action="https://www.google.com/search">
+                    <div class="fpw">
+                        <label> Find Pages With... </label>
+                    </div>
+                    <div class="input">
+                        <div class="textField">
+                            <label for="as_q">all these words:</label>                    
+                        </div>
+                        <input type="text" name="as_q">
+                        <br></br>
+                    </div>
+
+                    <div class="input">
+                        <div class="textField">
+                            <label for="as_epq">this exact word or phrase:</label>
+                        </div>
+                        <input type="text" name="as_epq">
+                        <br></br>
+                    </div>
+
+                    <div class="input">
+                        <div>
+                            <div class="textField">
+                                <label for="as_oq">any of these words: </label>
+                            </div>
+                            <input type="text" name="as_oq">
+                            <br></br>
+                        </div>
+                    </div>
+                    <div class="input">
+                        <div class="textField">
+                            <label for="as_eq">none of these words:</label>
+                        </div>
+                        <input type="text" name="as_eq">
+                        <br></br>
+                    </div>
+                    <button class="submitButton">
+                        Search
+                    </button>
+                </form>
+            </div>
+
         </div>
     </body>
 </html>
