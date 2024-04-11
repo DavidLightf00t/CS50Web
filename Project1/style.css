@@ -75,3 +75,11 @@ form{
 input{
     width:50%
 }
+
+.submitButton{
+    background-color: rgb(41, 184, 240);
+    height: 40px;
+    border-radius: 5px;
+    float: left;
+    margin-right: 10%;
+}
