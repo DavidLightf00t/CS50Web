@@ -24,51 +24,59 @@
         <div>
             <label class="seperator"></label>
         </div>
+
         <div class="topFields">
             <div class="inputFields">                
-                <form name="f" method="get" action="https://www.google.com/search">
+                <form method="get" action="https://www.google.com/search">
                     <div class="fpw">
                         <label> Find Pages With... </label>
                     </div>
+
                     <div class="input">
-                        <div class="textField">
-                            <label for="as_q">all these words:</label>                    
-                        </div>
+                        <label>All these words:</label>
                         <input type="text" name="as_q">
                         <br></br>
+
+                        <div class="clarification">
+                            Type the important words: <span class="monospace">tri-colour rat terrier</span>
+                        </div>
                     </div>
 
                     <div class="input">
-                        <div class="textField">
-                            <label for="as_epq">this exact word or phrase:</label>
-                        </div>
+                        <label for="as_epq">this exact word or phrase:</label>
                         <input type="text" name="as_epq">
                         <br></br>
+                        <div class="clarification">
+                            Put exact words in quotes: <span class="monospace">"rat terrier"</span>
+                        </div>
                     </div>
 
                     <div class="input">
-                        <div>
-                            <div class="textField">
-                                <label for="as_oq">any of these words: </label>
-                            </div>
-                            <input type="text" name="as_oq">
-                            <br></br>
+                        <label for="as_oq">any of these words: </label>
+                        <input type="text" name="as_oq">
+                        <br></br>
+                        <div class="clarification">
+                            Type <span style="font-family: monospace;" >OR</span> between all the words you want: <span class="monospace">miniature OR standard</span>
                         </div>
                     </div>
+
                     <div class="input">
-                        <div class="textField">
-                            <label for="as_eq">none of these words:</label>
-                        </div>
+                        <label for="as_eq">none of these words:</label>
                         <input type="text" name="as_eq">
                         <br></br>
+                        <div class="clarification">
+                            Put a minus sign just before words you don't want: <span class="monospace">-rodent, -"Jack Russell"</span>
+                        </div>
                     </div>
-                    <button class="submitButton">
-                        Advanced Search
-                    </button>
+
+                    <div class="input">
+                        <label for="sub"></label>
+                        <button class="submitButton" name="sub">
+                            Advanced Search
+                        </button>
                     </div>
                 </form>
             </div>
-
         </div>
     </body>
 </html>
