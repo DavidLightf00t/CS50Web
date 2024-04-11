@@ -23,7 +23,55 @@ a:active{
 body{
     font-family: sans-serif;
     background-color: rgba(255,255,255);
+    min-height: 100vh;
 }
+
+/* Main Search */
+.mainPageWrapper{
+    min-width: none;
+    min-height: 60vh;
+}
+
+.mainPageWrapper .logo{
+    margin-top: 100px;
+    position: absolute;
+    top: 18%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+
+.mainPageWrapper .mainPageInput{
+    margin-top: 220px;
+    position: absolute;
+    top: 18%;
+    left: 15%;
+    -ms-transform: translate(-0%, -50%);
+    transform: translate(-0%, -50%);
+
+    width: 100%;
+}
+
+form .submit{
+    background-image: url("https://upload.wikimedia.org/wikipedia/commons/5/55/Magnifying_glass_icon.svg") ;
+    background-size: 20px;
+    background-repeat: no-repeat;
+    background-position: 15px center;
+}
+
+input[type="text"] {
+    border-radius: 30px;
+    background-color: transparent;
+    margin: 0;
+    padding: 0px 0px 0px 40px;
+    font-size: 16px;
+    color: inherit;
+    border: 1px solid black;
+    height: 40px;
+    width: 65%;
+}
+
+/* Image Search */
 
 
 /* Advanced Image Search */
