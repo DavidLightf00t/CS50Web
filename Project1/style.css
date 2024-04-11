@@ -1,14 +1,18 @@
+a{
+    text-decoration: none;
+}
+
 a:link{
     color:blue
 }
 a:visited {
-    color:blue
+    color:blueviolet
 }
 a:hover {
-    color:green
+    text-decoration: underline;
 }
 a:active{
-    color:blueviolet
+    color:purple
 }
 .redirectLinks{
     position:absolute;
