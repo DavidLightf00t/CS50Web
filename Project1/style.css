@@ -18,15 +18,33 @@ a:active{
 }
 body{
     font-family: sans-serif;
+    background-color: rgba(255,255,255);
+}
+
+.appbar{
+    height: 30px;
+    color: red;
+    margin-top: 25px;
+    margin-left: 35px;
+    margin-bottom: 25px;
+    font-size: 25px;
+}
+
+.seperator{
+    border-color: black;
+    border-bottom: 1px solid black;
+    width: 100%;
 }
 
 .topFields{
     width: 100%;
     height: 25%;
+    margin-left: 35px;
+    margin-top: 75px;
 }
 
 .inputFields{
-    padding-left: 10px;
+    padding-left: 0px;
     overflow: hidden;
 }
 
@@ -37,7 +55,23 @@ label{
 }
 
 form{
-    height: 40px;
-    width: 600px;
+    height: 50%;
+    width: 100%;
+    color: black
 }
 
+.banner{
+    height: 50px;
+}
+
+.fpw{
+    margin-bottom: 35px;
+    height: 10px;
+    font-size: 20px;
+    text-align: left;
+
+}
+
+input{
+    width:50%
+}
