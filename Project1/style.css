@@ -30,8 +30,14 @@ body{
     overflow: hidden;
 }
 
-.labels{
-    padding-left: 0px;
+label{
+    padding-left: 10px;
+    width: 200px;
     float: left;
+}
+
+form{
+    height: 40px;
+    width: 600px;
 }
 

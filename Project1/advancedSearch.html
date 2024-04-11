@@ -8,27 +8,28 @@
     <body>
         <h4>Find pages with...</h4>
         <div class="topFields">
-            <div class="labels">
-                <p>all these words:</p>
-                <p>these exact words:</p>
-                <p>any of these words</p>
-                <p>none of these words</p>
-                <p>numbers from</p>
-            </div>
             <div class="inputFields">
-                <form id="as_q" method="get" action="https://www.google.com/search">
+                <label for="as_q">all these words:</label>
+                <label for="as_epq">these exact words:</label>
+                <form id="as_q" name="as_q" method="get" action="https://www.google.com/search">
                     <input type="search" name="as_q">
+                    <br></br>
                 </form>
-                <form id="as_epq" method="get" action="https://www.google.com/search?as_q">
+                <form id="as_epq" name="as_eqp" method="get" action="https://www.google.com/search?as_q">
                     <input type="search" name="as_epq">
+                    <br></br>
                 </form>
-                <form id="as_oq" method="get" action="https://www.google.com/search?as_q=&as_epq=">
-                    <input type="search" name="as_oq">
+                <form method="get" action="https://www.google.com/search?as_q=&as_epq=">
+                    <input id="as_oq" name="as_oq" type="search" name="as_oq">
+                    <br></br>
                 </form>
                 <form id="as_eq" method="get" action="https://www.google.com/search?as_q=&as_epq=&as_oq=">
+                    <label for="as_eq">none of these words</label>
                     <input type="search" name="as_eq">
+                    <br></br>
                 </form>
                 <form id="as_n" method="get" action="https://www.google.com/search?as_q=&as_epq=&as_oq=&as_eq="> 
+                    <label for="as_n">numbers from:</label>
                     <input type="search" name="as_nlo">
                     to
                     <input type="search" name="as_nhi">
