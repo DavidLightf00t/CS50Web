@@ -4,17 +4,23 @@
         <title>Search</title>
         <link rel="stylesheet" href="style.css"/>
         <link rel="html" href="index.html"/>
-    </div>
+    </head>
     <body>
-        <div>
-            <form action="https://www.search.google.com/">
-                <input type="text" name="q">
-                <input type="submit" value="Image Search">
-            </form>
+        <div class="banner">
+            <div class="redirectLinks">
+                <a id="search" href="index.html">Search</a>
+            </div>
         </div>
-        <div class="redirectLinks">
-            <a id="search" href="index.html">Search</a>
+        <div class="mainPageWrapper">
+            <div class="logo">
+                <img src="googleImagesLogo.png" alt="googleImagesLogo">
+            </div>
+
+            <div class="mainPageInput">
+                <form class="submit" action="https://images.google.com/images">
+                    <input class="submit" type="text" name="q">
+                </form>
+            </div>
         </div>
-        
     </body>
 </html>
