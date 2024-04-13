@@ -82,13 +82,11 @@ body{
 .mainPageButtons{
     position: absolute;
     display: block;
-    margin-left: 25%;
-    margin-right: 25%;
 
     text-align: center;
-    width: 50%;
     margin-top: 10px;
 
+    width: 100%;
 }
 
 
