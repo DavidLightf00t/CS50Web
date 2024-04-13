@@ -89,6 +89,13 @@ body{
     width: 100%;
 }
 
+.mainPageSubmitButton{
+    background-color: rgb(41, 184, 240);
+}
+
+.imFeelingLucky{
+    background-color: rgb(41, 184, 240);
+}
 
 
 /* Advanced Image Search */
