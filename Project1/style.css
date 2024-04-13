@@ -43,17 +43,18 @@ body{
 }
 
 .mainPageWrapper .mainPageInput{
-    margin-top: 220px;
     position: absolute;
-    top: 18%;
-    left: 15%;
-    -ms-transform: translate(-0%, -50%);
-    transform: translate(-0%, -50%);
+    width: 50%;
+    margin-right: 100%;
+    margin-left: 25%;
 
-    width: 100%;
+    top: 45%;
+
 }
 
-.mainPageInput .submit{
+
+
+.mainPageInput form{
     background-image: url("https://upload.wikimedia.org/wikipedia/commons/5/55/Magnifying_glass_icon.svg") ;
     background-size: 20px;
     background-repeat: no-repeat;
@@ -61,18 +62,35 @@ body{
 }
 
 .mainPageInput [type="text"] {
-    border-radius: 30px;
+    width: calc(100% - 40px);
+    padding-left: 40px;
+    border-radius: 40px;
     background-color: transparent;
-    margin: 0;
-    padding: 0px 0px 0px 40px;
     font-size: 16px;
     color: inherit;
     border: 1px solid black;
     height: 40px;
-    width: 65%;
+}
+
+.mainPageInput form{
+    display: block;
+    right: 40px;
 }
 
 /* Image Search End */
+
+.mainPageButtons{
+    position: absolute;
+    display: block;
+    margin-left: 25%;
+    margin-right: 25%;
+
+    text-align: center;
+    width: 50%;
+    margin-top: 10px;
+
+}
+
 
 
 /* Advanced Image Search */
