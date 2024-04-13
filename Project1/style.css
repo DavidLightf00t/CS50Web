@@ -36,7 +36,7 @@ body{
 .mainPageWrapper .logo{
     margin-top: 100px;
     position: absolute;
-    top: 18%;
+    top: 10%;
     left: 50%;
     -ms-transform: translate(-50%, -50%);
     transform: translate(-50%, -50%);
@@ -47,9 +47,17 @@ body{
     width: 50%;
     margin-right: 100%;
     margin-left: 25%;
+    top: 39%;
+}
 
-    top: 45%;
+.logoAndInputWrapper{
+    position: absolute;
+    padding-top: 20%;
 
+    height: 500px;
+    width: 100%;
+
+    
 }
 
 
