@@ -45,8 +45,14 @@ def search(request):
                 "content": html
             })
         else:
-            return render(request, "encyclopedia/error.html",{
-                "error": "This entry does not exist"
+            all_current_entries = util.list_entries()
+            recommendations = []
+
+            for entry in all_current_entries:
+                if entry_search.lower() in entry.lower():
+                    recommendations.append(entry)
+            return render(request, "encyclopedia/search.html",{
+                "recommendations": recommendations
             })
 
     
