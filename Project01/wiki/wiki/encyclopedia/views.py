@@ -33,3 +33,20 @@ def entry(request, title):
             "title": title,
             "content": html_content,
         })
+
+def search(request):
+    if request.method == "POST":
+        entry_search = request.POST['q']
+        html = convert_md_to_html(entry_search)
+
+        if html is not None:
+            return render(request, "encyclopedia/entry.html",{
+                "title": entry_search,
+                "content": html
+            })
+        else:
+            return render(request, "encyclopedia/error.html",{
+                "error": "This entry does not exist"
+            })
+
+    
