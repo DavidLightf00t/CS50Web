@@ -1,14 +1,15 @@
+{% extends "encyclopedia/layout.html" %}
+
 {% block title %}
     Encyclopedia
 {% endblock %}
 
 {% block body %}
-    <h1>All Pages</h1>
+    <h1>Add a New Entry</h1>
 
-    <ul>
-        {% for entry in entries %}
-            <li><a href="">{{ entry }}</a></li>
-        {% endfor %}
-    </ul>
+    <form>
+        <textarea placeholder="Enter text here..."></textarea>
+        <button>Submit Entry</button>
+    </form>
 
 {% endblock %}
