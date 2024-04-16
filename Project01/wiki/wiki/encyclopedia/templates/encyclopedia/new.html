@@ -6,10 +6,12 @@
 
 {% block body %}
     <h1>Add a New Entry</h1>
-
-    <form>
-        <textarea placeholder="Enter text here..."></textarea>
+    <!-- Action is where the result will be sent -->
+    <form action="{% url 'index' %}" method="POST">
+        {% csrf_token %}
+        <textarea placeholder="Enter text here... Please use markup language" name=""></textarea>
         <button>Submit Entry</button>
+
     </form>
 
 {% endblock %}
