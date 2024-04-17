@@ -27,10 +27,12 @@ def random(request):
     num = randint(0, len(util.list_entries())-1)
     choice = util.list_entries()
     choice = choice[num]
+    html = convert_md_to_html(choice)
 
-    return render(request, "encyclopedia/random.html",{
-        "entry": choice,
-    })
+    return render(request, "encyclopedia/entry.html",{
+                "title": choice,
+                "content": html
+            })
 
 
 def entry(request, title):
