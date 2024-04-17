@@ -1,5 +1,6 @@
 from django.shortcuts import render
 import markdown
+from random import randint
 
 from . import util
 
@@ -21,6 +22,16 @@ def new(request):
     return render(request, "encyclopedia/new.html",{
         "entries": util.list_entries()
     })
+
+def random(request):
+    num = randint(0, len(util.list_entries())-1)
+    choice = util.list_entries()
+    choice = choice[num]
+
+    return render(request, "encyclopedia/random.html",{
+        "entry": choice,
+    })
+
 
 def entry(request, title):
     html_content = convert_md_to_html(title)
@@ -54,5 +65,6 @@ def search(request):
             return render(request, "encyclopedia/search.html",{
                 "recommendations": recommendations
             })
+        
 
     
