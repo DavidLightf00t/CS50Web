@@ -7,9 +7,16 @@
 {% block body %}
     <h1>Add a New Entry</h1>
     <!-- Action is where the result will be sent -->
-    <form action="{% url 'index' %}" method="POST">
+    <form action="{% url 'newPage' %}" method="POST">
         {% csrf_token %}
-        <textarea placeholder="Enter text here... Please use markup language" name=""></textarea>
+
+        <label>Title:</label>
+        <input type="text" name="title" placeholder="Enter Title">
+        <br>
+
+        <label>Content:</label>
+        <br>
+        <textarea name="content" placeholder="Enter text here... Please use markup language" name=""></textarea>
         <button>Submit Entry</button>
 
     </form>
