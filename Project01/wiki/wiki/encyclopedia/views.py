@@ -15,13 +15,43 @@ def convert_md_to_html(title):
 
 def index(request):
     return render(request, "encyclopedia/index.html", {
-        "entries": util.list_entries()
+    "entries": util.list_entries()
     })
 
-def new(request):
-    return render(request, "encyclopedia/new.html",{
-        "entries": util.list_entries()
-    })
+def edit(request):
+    
+    if request.method == "GET":
+        currentTitle = request.POST['title']
+        currentContent = request.POST['content']
+        return render(request, "encyclopedia/edit.html",{
+            "title", currentTitle,
+            "content", currentContent
+        })
+
+def newPage(request):
+    if request.method == "GET":
+        return render(request, "encyclopedia/new.html")
+    else:
+        print(request)
+        title = request.POST['title']
+        content = request.POST['content']
+
+        #check if title exists
+        titleExists = util.get_entry(title)
+        if titleExists is not None:
+            return render(request, "encyclopedia/error.html", {
+                "error_message": "This entry already exists"
+            })
+        #add new entry
+        else:
+            util.save_entry(title, content)
+            html = convert_md_to_html(title)
+            print(title)
+            print(html)
+            return render(request, "encyclopedia/index.html", {
+                "title": title,
+                "content": html
+            })
 
 def random(request):
     num = randint(0, len(util.list_entries())-1)
