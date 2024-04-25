@@ -86,7 +86,7 @@ def entry(request, title):
 def search(request):
     if request.method == "POST":
         user_search = request.POST['q']
-        html = convert_md_to_html(entry_search)
+        html = convert_md_to_html(user_search)
 
         if html is not None:
             return render(request, "encyclopedia/entry.html",{
