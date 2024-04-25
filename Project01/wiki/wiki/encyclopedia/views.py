@@ -55,11 +55,8 @@ def newPage(request):
         else:
             util.save_entry(title, content)
             html = convert_md_to_html(title)
-            print(title)
-            print(html)
             return render(request, "encyclopedia/index.html", {
-                "title": title,
-                "content": html
+                "entries": util.list_entries()
             })
 
 def random(request):
