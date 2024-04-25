@@ -7,11 +7,11 @@
 {% block body %}
     <h1>Edit Existing Entry</h1>
     <!-- Action is where the result will be sent -->
-    <form action="{% url 'editPage' %}" method="POST">
+    <form action="{% url 'savePage' %}" method="POST">
         {% csrf_token %}
 
         <label>Title:</label>
-        <input type="text" name="title">{{ title }}</input>
+        <input type="text" name="title" value="{{ title }}">
         <br>
 
         <label>Content:</label>

@@ -18,21 +18,30 @@ def index(request):
     "entries": util.list_entries()
     })
 
-def edit(request):
+def editPage(request):
+    if request.method == "POST":
+        title = request.POST['title']
+        content = util.get_entry(title)
+        return render(request, "encyclopedia/edit.html", {
+            "title": title,
+            "content": content
+        })
     
-    if request.method == "GET":
-        currentTitle = request.POST['title']
-        currentContent = request.POST['content']
-        return render(request, "encyclopedia/edit.html",{
-            "title", currentTitle,
-            "content", currentContent
+def savePage(request):
+    if request.method == "POST":
+        title = request.POST['title']
+        content = request.POST['content']
+        util.save_entry(title, content)
+        html = convert_md_to_html(title)
+        return render(request, "encyclopedia/entry.html",{
+            "title": title,
+            "content": html
         })
 
 def newPage(request):
     if request.method == "GET":
         return render(request, "encyclopedia/new.html")
     else:
-        print(request)
         title = request.POST['title']
         content = request.POST['content']
 
