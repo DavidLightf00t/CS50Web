@@ -1,0 +1,24 @@
+-- Creates table
+CREATE TABLE flights (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    origin TEXT NOT NULL,
+    destination TEXT NOT NULL,
+    duration INTEGER NOT NULL
+);
+
+-- Inserts into a table
+INSERT INTO flights
+    (origin, destination, duration)
+    Values ("New York", "London", 415);
+
+-- Selects all(*) data from flights table
+SELECT * FROM flights;
+
+-- Selects origin and flights column from flights table
+SELECT origin, destination FROM flights
+
+-- Selects all columns where the id is 3
+SELECT * FROM flights WHERE id = 3
+
+-- Selects all columns where origin is new york
+SELECT * FROM flights WEHRE origin = "New York";
