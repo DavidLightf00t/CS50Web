@@ -10,6 +10,8 @@ from .models import User
 def index(request):
     return render(request, "auctions/index.html")
 
+def newListing(request):
+    return render(request, "auctions/newListing.html")
 
 def login_view(request):
     if request.method == "POST":
@@ -61,3 +63,36 @@ def register(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "auctions/register.html")
+
+def newListing(request):
+    if request.method == "POST":
+        title = request.POST["title"]
+        description = request.POST["description"]
+        url = request.POST["url"]
+        category = request.POST["category"]
+        starting_bid = request.POST["starting_bid"]
+
+        if not title:
+            return render(request, "auctions/newListing.html", {
+        "message": "Title Needed"
+        })
+
+        if not description:
+            return render(request, "auctions/newListing.html", {
+        "message": "Description Needed"
+        })
+
+        if not url and not category:
+            return render(request, "auctions/newListing.html", {
+        "message": "Url and/or Category Needed"
+        })
+
+        if not starting_bid:
+            return render(request, "auctions/newListing.html", {
+        "message": "Starting Bid Needed"
+        })
+
+        return HttpResponseRedirect(reverse("index"))
+    
+    else:
+        return render(request, "auctions/newListing.html")
