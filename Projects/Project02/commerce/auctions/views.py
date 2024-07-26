@@ -4,14 +4,14 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from .models import User
+from .models import User, Listings, Bids, Comments
 
 
 def index(request):
-    return render(request, "auctions/index.html")
+    return render(request, "auctions/index.html", {
+        "auctions": Listings.objects.all()
+    })
 
-def newListing(request):
-    return render(request, "auctions/newListing.html")
 
 def login_view(request):
     if request.method == "POST":
@@ -43,6 +43,11 @@ def register(request):
         username = request.POST["username"]
         email = request.POST["email"]
 
+        if not email:
+            return render(request, "auctions/register.html", {
+                "message": "Must Attatch an Email Account"
+            })
+
         # Ensure password matches confirmation
         password = request.POST["password"]
         confirmation = request.POST["confirmation"]
@@ -50,6 +55,12 @@ def register(request):
             return render(request, "auctions/register.html", {
                 "message": "Passwords must match."
             })
+        
+        if not password:
+            return render(request, "auctions/register.html", {
+                "message": "Must Input a Password"
+            })
+        
 
         # Attempt to create new user
         try:
@@ -91,8 +102,29 @@ def newListing(request):
             return render(request, "auctions/newListing.html", {
         "message": "Starting Bid Needed"
         })
+        
+        if not url:
+            new_listing = Listings(title=title, description=description, category=category, starting_bid=starting_bid)
+            new_listing.save()
+        
+        elif not category:
+            new_listing = Listings(title=title, description=description, url=url, starting_bid=starting_bid)
+            new_listing.save()
+
+        else:
+            new_listing = Listings(title=title, description=description, url=url, category=category, starting_bid=starting_bid)
+            new_listing.save()
+
+
 
         return HttpResponseRedirect(reverse("index"))
     
     else:
         return render(request, "auctions/newListing.html")
+    
+
+def listing(request, title):
+
+    return render(request, "auctions/auctions.html", {
+        "info": Listings.objects.get(title=title),
+    })

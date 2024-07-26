@@ -1,0 +1,31 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+    <h1>{{ info.title }} </h1>
+
+    <div class="item_info">
+        <div class="item_description">
+            <h5>Description: </h5>
+            <p>{{ info.description }}</p>
+        </div>
+
+        <div class="item_photo">
+            <img src="{{ info.photo }}" alt="photo">
+        </div>
+
+        <div class="item_category">
+            Category: {{ info.category }}
+        </div>
+
+        <div class="starting_bid">
+            Starting Bid:
+            {{ info.starting_bid}}
+        </div>
+
+    </div>
+    
+
+
+{% endblock %}
+

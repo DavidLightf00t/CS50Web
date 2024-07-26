@@ -3,5 +3,14 @@
 {% block body %}
     <h2>Active Listings</h2>
 
+    {% for listing in auctions %}
+        <div>
+            <a href="{% url 'listing' listing.title %}">
+                {{listing.title}}
+            </a> 
+        </div>
+
+    {% endfor %}
+
     TODO
 {% endblock %}
