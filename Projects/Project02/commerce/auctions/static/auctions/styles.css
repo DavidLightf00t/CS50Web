@@ -14,3 +14,21 @@ body {
     object-fit: cover;
 }
 
+.active_listings{
+    border-style: solid;
+    border-color: darkgray;
+    border-width: 2px;
+    margin-bottom: 10px;
+    display: table;
+    width: 100%;
+}
+
+#active_listing_photo{
+    display: table-cell;
+    width: 33%;
+}
+
+#active_listing_info{
+    display: table-cell;
+    width: 67%;
+}
