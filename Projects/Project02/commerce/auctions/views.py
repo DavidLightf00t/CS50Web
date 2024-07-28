@@ -125,6 +125,41 @@ def newListing(request):
 
 def listing(request, title):
 
+    #Returns all of the info of the listing model. Title, Description, Photo Url, Category, and Starting Bid
     return render(request, "auctions/auctions.html", {
         "info": Listings.objects.get(title=title),
+    })
+
+def new_bid(request):
+    if request.method == "POST":
+        title = request.POST["title"]
+        new_bid = request.POST["bid"]
+        current_bid = Listings.objects.get(title=title)
+
+        # We need to make the new bid into a float (originally a string)
+        # We then need to compare the new bid passed to the current bid
+        # If the new bid is greater update if not error
+        new_bid = float(new_bid)
+        
+        if new_bid <= current_bid.starting_bid:
+            return render(request, "auctions/auctions.html", {
+                "info": Listings.objects.get(title=title),
+                "message": "New Bid MUST be larger than current bid"
+            })
+        
+        #Now that all of the bid info has been gotten, make a bid object
+        # Bids(new_bid, NameOfUser, title)
+
+        #TODO Make User info model work
+
+        #Assign and save new bid
+        current_bid.starting_bid = new_bid
+        current_bid.save()
+
+        #Update number of bids
+
+        return HttpResponseRedirect(reverse("index"))
+    
+    return render(request, "auctions/auctions.html", {
+        "info": Listings.objects.get(title=title)
     })

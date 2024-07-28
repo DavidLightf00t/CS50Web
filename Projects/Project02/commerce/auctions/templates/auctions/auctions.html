@@ -4,13 +4,19 @@
 
     <h1>{{ info.title }} </h1>
 
+        {% if message %}
+            <div class="alert-info">
+                {{ message }}
+            </div>
+        {% endif %}
+
     <div class="item_info">
         <div class="item_description">
             <h5>Description: </h5>
             <p>{{ info.description }}</p>
         </div>
 
-        <div class="item_photo">
+        <div class="main_item_photo">
             <img src="{{ info.photo }}" alt="photo">
         </div>
 
@@ -18,11 +24,22 @@
             Category: {{ info.category }}
         </div>
 
-        <div class="starting_bid">
-            Starting Bid:
-            {{ info.starting_bid}}
+        <div class="current_bid">
+            Current Bid: ${{ info.starting_bid|floatformat:2  }}
         </div>
 
+        
+
+        <div class="new_bid">
+
+            <form action="{% url 'new_bid' %}" method="post">
+                {% csrf_token %}
+                <input type="text" name="title" id="title" hidden value="{{ info.title }}">
+                <input type="number" name="bid" id="new_bid" placeholder="0" value="0">
+                <input type="submit" class="btn btn-primary" value="Place Bid">
+            </form>
+
+        </div>
     </div>
     
 

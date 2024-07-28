@@ -17,7 +17,10 @@
                 </a> 
 
                 <p>
-                    Price: {{listing.starting_bid}}
+                    Price: ${{listing.starting_bid|floatformat:2}}
+                </p>
+                <p>
+                    Listed: {{listing.time_of_listing}}
                 </p>
             </div>
 
@@ -25,6 +28,7 @@
 
     {% endfor %}
     
-
-    TODO
 {% endblock %}
+
+<!-- Make new git branch then delete db 
+     reinstate db if needed -->
