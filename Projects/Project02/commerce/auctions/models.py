@@ -21,7 +21,7 @@ class Listings(models.Model):
     category = models.CharField(max_length=64, blank=True)
     starting_bid = models.FloatField(max_length=64, default=0, blank=False)
     number_of_bids = models.FloatField(max_length=8, default=0)
-    time_of_listing = models.TimeField(default=None)
+    time_of_listing = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.title

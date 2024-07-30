@@ -102,21 +102,20 @@ def newListing(request):
             return render(request, "auctions/newListing.html", {
         "message": "Starting Bid Needed"
         })
+
+        if category and url:
+            new_listing = Listings(title=title, description=description, photo=url, category=category, starting_bid=starting_bid)
+            new_listing.save()
         
         if not url:
             new_listing = Listings(title=title, description=description, category=category, starting_bid=starting_bid)
             new_listing.save()
         
-        elif not category:
-            new_listing = Listings(title=title, description=description, url=url, starting_bid=starting_bid)
+        if not category:
+            new_listing = Listings(title=title, description=description, photo=url, starting_bid=starting_bid)
             new_listing.save()
 
-        else:
-            new_listing = Listings(title=title, description=description, url=url, category=category, starting_bid=starting_bid)
-            new_listing.save()
-
-
-
+        
         return HttpResponseRedirect(reverse("index"))
     
     else:
@@ -147,18 +146,23 @@ def new_bid(request):
                 "message": "New Bid MUST be larger than current bid"
             })
         
-        #Now that all of the bid info has been gotten, make a bid object
-        # Bids(new_bid, NameOfUser, title)
+        if User.is_authenticated == True:
+            #Now that all of the bid info has been gotten, make a bid object
+            Bids(new_bid, User.username, title)
 
-        #TODO Make User info model work
+            #TODO Make User info model work
 
-        #Assign and save new bid
-        current_bid.starting_bid = new_bid
-        current_bid.save()
+            #Assign and save new bid
+            current_bid.starting_bid = new_bid
+            current_bid.save()
 
-        #Update number of bids
-
-        return HttpResponseRedirect(reverse("index"))
+            #Update number of bids
+            return HttpResponseRedirect(reverse("index"))
+        
+        else:
+            return render(request, "auctions/login.html", {
+                "message": "Must Be Logged In to Place Bids"
+            })
     
     return render(request, "auctions/auctions.html", {
         "info": Listings.objects.get(title=title)

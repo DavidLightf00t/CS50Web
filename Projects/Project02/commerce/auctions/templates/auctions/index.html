@@ -8,20 +8,19 @@
         <div class="active_listings">
 
             <div class="item_photo" id="active_listing_photo">
-                <img src="{{listing.photo}}" alt="photo">
+                <img src="{{listing.photo}}">
             </div>
 
             <div id="active_listing_info">
                 <a href="{% url 'listing' listing.title %}">
                     {{listing.title}}
-                </a> 
+                </a>
 
-                <p>
+                <br>
                     Price: ${{listing.starting_bid|floatformat:2}}
-                </p>
-                <p>
+                <br>
                     Listed: {{listing.time_of_listing}}
-                </p>
+                
             </div>
 
         </div>
@@ -31,4 +30,5 @@
 {% endblock %}
 
 <!-- Make new git branch then delete db 
-     reinstate db if needed -->
+     reinstate db if needed
+     WORKED!!! -->

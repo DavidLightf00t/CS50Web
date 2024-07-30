@@ -3,9 +3,8 @@ body {
 }
 
 .item_photo{
-    height: 2rem;
-    width: 3rem;
-    align-content: center;
+    height: 200px;
+    width: 250px;
     text-align: center;
     overflow: hidden;
 }
@@ -19,6 +18,7 @@ body {
 .active_listings{
     border-style: solid;
     border-color: darkgray;
+    align-content: center;
     border-width: 2px;
     margin-bottom: 10px;
     display: table;
@@ -33,4 +33,6 @@ body {
 #active_listing_info{
     display: table-cell;
     width: 67%;
+    vertical-align: top;
+    line-height: 50px;
 }
