@@ -2,7 +2,7 @@
 
 {% block body %}
 
-    <h1>{{ info.title }} </h1>
+    <h1>{{ listing_info.title }} </h1>
 
         {% if message %}
             <div class="alert-info">
@@ -13,19 +13,25 @@
     <div class="item_info">
         <div class="item_description">
             <h5>Description: </h5>
-            <p>{{ info.description }}</p>
+            <p>{{ listing_info.description }}</p>
         </div>
 
         <div class="main_item_photo">
-            <img src="{{ info.photo }}" alt="photo">
+            <img src="{{ listing_info.photo }}" alt="photo">
         </div>
 
         <div class="item_category">
-            Category: {{ info.category }}
+            Category: {{ listing_info.category }}
         </div>
 
         <div class="current_bid">
-            Current Bid: ${{ info.starting_bid|floatformat:2  }}
+            Current Bid: ${{ listing_info.starting_bid|floatformat:2  }}
+        </div>
+        
+        <div class="bid_info">
+             <!-- Add Number of Bids on Particular Item to Models -->  bid(s) so far. {{ bid_info.name }} is the current bidder
+             <!-- Add If Statement to see if the signed in user is the current bidder to display "Your bid is the current bid"-->
+             <!-- Else Display "*USERNAME* is the current bidder" -->
         </div>
 
         
@@ -34,11 +40,20 @@
 
             <form action="{% url 'new_bid' %}" method="post">
                 {% csrf_token %}
-                <input type="text" name="title" id="title" hidden value="{{ info.title }}">
-                <input type="number" name="bid" id="new_bid" placeholder="0" value="0">
-                <input type="submit" class="btn btn-primary" value="Place Bid">
+                <input type="text" name="title" id="title" hidden value="{{ listing_info.title }}">
+                <input type="number" name="bid" id="new_bid" placeholder="0" >
+                <input type="submit" class="btn btn-primary" id="place_bid_button" value="Place Bid">
             </form>
+                
 
+        </div>
+
+        <div class="new_watchlist_item">
+            <form action="{% url 'watchlist' %}" method="post">
+                {% csrf_token %}
+                <input type="text" name="title" id="title" hidden value="{{ listing_info.title }}">
+                <input type="submit" class="btn-check" value="♡ Watchlist">
+            </form>
         </div>
     </div>
     
