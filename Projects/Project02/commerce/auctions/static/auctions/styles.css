@@ -82,3 +82,8 @@ body {
     height: 100%;
     object-fit:contain;
 }
+
+#search_bar{
+    margin-bottom: 10px;
+    width: 100%;
+}

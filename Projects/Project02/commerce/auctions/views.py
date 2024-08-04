@@ -244,3 +244,19 @@ def category_listings(request, category):
         "listing": Listings.objects.filter(category=category),
         "category": category
     })
+
+def search(request):
+    if request.method == "POST":
+        query = request.POST["query"]
+        objects = Listings.objects.all()
+
+        titles = []
+
+        for listings in objects:
+            if query.lower() in listings.title.lower():
+                titles.append(listings)
+            
+
+        return render(request, "auctions/search.html", {
+            "query": titles
+        })
