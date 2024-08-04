@@ -3,32 +3,28 @@
 {% block body %}
     <h2>Active Listings</h2>
     
-    {% for listing in auctions %}
+    {% for listings in auctions %}
 
         <div class="active_listings">
 
-            <div class="index_item_photo" id="active_listing_photo">
-                <img src="{{listing.photo}}">
-            </div>
+            <a href="{% url 'listing' listings.title %}" id="active_listing_link">
+                <div class="index_item_photo" id="active_listing_photo">
+                    <img src="{{listings.photo}}">
+                </div>
 
-            <div id="active_listing_info">
-                <a href="{% url 'listing' listing.title %}">
-                    {{listing.title}}
-                </a>
+                <div id="active_listing_info">
+                    {{listings.title}}
 
                 <br>
-                    Price: ${{listing.starting_bid|floatformat:2}}
+                    Price: ${{listings.starting_bid|floatformat:2}}
                 <br>
-                    Listed: {{listing.time_of_listing}}
+                    Listed: {{listings.time_of_listing}}
                 
-            </div>
+                </div>
+            </a>
 
         </div>
 
     {% endfor %}
     
 {% endblock %}
-
-<!-- Make new git branch then delete db 
-     reinstate db if needed
-     WORKED!!! -->
