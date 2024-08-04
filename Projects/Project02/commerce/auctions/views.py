@@ -107,15 +107,15 @@ def newListing(request):
         })
 
         if category and url:
-            new_listing = Listings(title=title, description=description, photo=url, category=category, starting_bid=starting_bid)
+            new_listing = Listings(title=title, description=description, photo=url, category=category, starting_bid=starting_bid, number_of_bids=0)
             new_listing.save()
         
         if not url:
-            new_listing = Listings(title=title, description=description, category=category, starting_bid=starting_bid)
+            new_listing = Listings(title=title, description=description, category=category, starting_bid=starting_bid, number_of_bids=0)
             new_listing.save()
         
         if not category:
-            new_listing = Listings(title=title, description=description, photo=url, starting_bid=starting_bid)
+            new_listing = Listings(title=title, description=description, photo=url, starting_bid=starting_bid, number_of_bids=0)
             new_listing.save()
 
         
@@ -154,14 +154,13 @@ def new_bid(request):
 
         #Get User objects
         user = request.user.get_username()
-        print(user)
 
         if user is not "":
             # We then need to compare the new bid passed to the current bid
             # If the new bid is greater update if not error
             if new_bid <= current_bid.starting_bid:
                 return render(request, "auctions/auctions.html", {
-                    "info": Listings.objects.get(title=title),
+                    "listing_info": Listings.objects.get(title=title),
                     "message": "New Bid MUST be larger than current bid"
                 })
 
@@ -170,6 +169,10 @@ def new_bid(request):
             bid_object.save()
 
             #TODO Make User info model work
+
+            # Increase number of bids
+            current_bid.number_of_bids = current_bid.number_of_bids + 1
+            current_bid.save()
 
             #Assign and save new bid
             current_bid.starting_bid = new_bid
@@ -184,7 +187,7 @@ def new_bid(request):
             })
     
     return render(request, "auctions/auctions.html", {
-        "info": Listings.objects.get(title=title)
+        "listing_info": Listings.objects.get(title=title)
     })
 
 
@@ -196,17 +199,15 @@ def category_view(request):
         if objects.category not in category_list:
             category_list.append(objects.category)
 
-    return render(request, "auctions/category.html", {
+    return render(request, "auctions/category_list.html", {
         "info": category_list,
     })
 
 def watchlist(request):
-    print(request.method == "POST")
 
     if request.method == "POST":
         title = request.POST["title"]
 
-        print("Going into POST", Watchlist.objects.all())
         if not Watchlist.objects.filter(listing=title):
             new_item = Watchlist(pk=title ,listing=title, addRemove=True)
             new_item.save()
@@ -216,16 +217,30 @@ def watchlist(request):
                 if objects.listing == title and objects.addRemove == True:
                     Watchlist(listing=title).delete()
 
-        print("Going out of POST", Watchlist.objects.all())
 
-    try:    
-        return render(request, "auctions/watchlist.html", {
-            "watchlist_items": Watchlist.objects.all().reverse()
-        })
+    try:
+        watchlist = Watchlist.objects.all()
+        titles = []
+        listing = []
     
+        for objects in watchlist:
+            titles.append(objects.listing)
+
+        for title in titles:
+            listing.append(Listings.objects.get(title=title))
+
+        return render(request, "auctions/watchlist.html", {
+            "watchlist_items": Watchlist.objects.all().reverse(),
+            "watchlist_items_info": listing
+        })
+        
     except OperationalError:
         return render(request, "auctions/watchlist.html", {
             "watchlist_items": None
         })
     
-    
+def category_listings(request, category):
+    return render(request, "auctions/category.html", {
+        "listing": Listings.objects.filter(category=category),
+        "category": category
+    })

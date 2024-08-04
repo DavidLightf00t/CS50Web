@@ -18,7 +18,7 @@ class Listings(models.Model):
     photo = models.URLField(default="https://t4.ftcdn.net/jpg/04/70/29/97/360_F_470299797_UD0eoVMMSUbHCcNJCdv2t8B2g1GVqYgs.jpg", blank=False)
     category = models.CharField(max_length=64, blank=True)
     starting_bid = models.FloatField(max_length=64, default=0, blank=False)
-    number_of_bids = models.FloatField(max_length=8, default=0)
+    number_of_bids = models.IntegerField(default=None)
     time_of_listing = models.DateTimeField(auto_now_add=True)
 
     # How the object names itself in the admin dashboard

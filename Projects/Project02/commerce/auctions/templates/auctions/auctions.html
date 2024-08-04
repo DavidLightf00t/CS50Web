@@ -2,7 +2,7 @@
 
 {% block body %}
 
-    <h1>{{ listing_info.title }} </h1>
+    <h2>Listing: {{ listing_info.title }} </h2>
 
         {% if message %}
             <div class="alert-info">
@@ -11,49 +11,56 @@
         {% endif %}
 
     <div class="item_info">
+        <div class="main_listing_photo_wrapper">
+            <div id="main_listing_photo">
+                <img src="{{ listing_info.photo }}" alt="photo">
+            </div>
+        </div>
+        
+
         <div class="item_description">
             <h5>Description: </h5>
             <p>{{ listing_info.description }}</p>
         </div>
 
-        <div class="main_item_photo">
-            <img src="{{ listing_info.photo }}" alt="photo">
-        </div>
-
-        <div class="item_category">
-            Category: {{ listing_info.category }}
-        </div>
-
         <div class="current_bid">
             Current Bid: ${{ listing_info.starting_bid|floatformat:2  }}
         </div>
-        
-        <div class="bid_info">
-             <!-- Add Number of Bids on Particular Item to Models -->  bid(s) so far. {{ bid_info.name }} is the current bidder
-             <!-- Add If Statement to see if the signed in user is the current bidder to display "Your bid is the current bid"-->
-             <!-- Else Display "*USERNAME* is the current bidder" -->
-        </div>
 
-        
+        <div class="bid_info">
+            {% if listing_info.number_of_bids == 0 %}
+                0 bids so far. No current bidder
+
+            {% else %}
+                <!-- Add Number of Bids on Particular Item to Models -->  {{ listing_info.number_of_bids }} bid(s) so far. <a href="{% url 'listing' listing_info.title %}">{{ bid_info.name }}</a> is the current bidder
+                <!-- Add If Statement to see if the signed in user is the current bidder to display "Your bid is the current bid"-->
+                <!-- Else Display "*USERNAME* is the current bidder" -->
+            {% endif %}
+
+             
+        </div>
 
         <div class="new_bid">
 
             <form action="{% url 'new_bid' %}" method="post">
                 {% csrf_token %}
                 <input type="text" name="title" id="title" hidden value="{{ listing_info.title }}">
-                <input type="number" name="bid" id="new_bid" placeholder="0" >
-                <input type="submit" class="btn btn-primary" id="place_bid_button" value="Place Bid">
+                <input type="number" name="bid" id="new_bid" placeholder="Bid" >
+                <input type="submit" class="btn btn-primary" id="place_bid_btn" value="Place Bid">
             </form>
                 
+            <div class="new_watchlist_item">
+                <form action="{% url 'watchlist' %}" method="post">
+                    {% csrf_token %}
+                    <input type="text" name="title" id="title" hidden value="{{ listing_info.title }}">
+                    <input type="submit" class="btn-check" id="watchlist_btn" value="♡ Watchlist">
+                </form>
+            </div>
 
         </div>
 
-        <div class="new_watchlist_item">
-            <form action="{% url 'watchlist' %}" method="post">
-                {% csrf_token %}
-                <input type="text" name="title" id="title" hidden value="{{ listing_info.title }}">
-                <input type="submit" class="btn-check" value="♡ Watchlist">
-            </form>
+        <div class="item_category">
+            Category: {{ listing_info.category }}
         </div>
     </div>
     
