@@ -3,32 +3,35 @@
 {% block body %}
     <h2>Active Listings</h2>
     
-    {% for listing in auctions %}
+    <div id="search_bar">
+        <form action="{% url 'search'%}" method="post">
+            {% csrf_token %}
+            <input type="search" placeholder="Search" id="search_bar" name="query">
+        </form>
+    </div>
+
+    {% for listings in auctions %}
 
         <div class="active_listings">
 
-            <div class="item_photo" id="active_listing_photo">
-                <img src="{{listing.photo}}" alt="photo">
-            </div>
+            <a href="{% url 'listing' listings.title %}" id="active_listing_link">
+                <div class="index_item_photo" id="active_listing_photo">
+                    <img src="{{listings.photo}}">
+                </div>
 
-            <div id="active_listing_info">
-                <a href="{% url 'listing' listing.title %}">
-                    {{listing.title}}
-                </a> 
+                <div id="active_listing_info">
+                    {{listings.title}}
 
-                <p>
-                    Price: ${{listing.starting_bid|floatformat:2}}
-                </p>
-                <p>
-                    Listed: {{listing.time_of_listing}}
-                </p>
-            </div>
+                <br>
+                    Price: ${{listings.starting_bid|floatformat:2}}
+                <br>
+                    Listed: {{listings.time_of_listing}}
+                
+                </div>
+            </a>
 
         </div>
 
     {% endfor %}
     
 {% endblock %}
-
-<!-- Make new git branch then delete db 
-     reinstate db if needed -->

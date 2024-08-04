@@ -3,8 +3,11 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
+from django.contrib.auth.models import User
+from django.core.exceptions import ObjectDoesNotExist
+from sqlite3 import OperationalError
 
-from .models import User, Listings, Bids, Comments
+from .models import User, Listings, Bids, Comments, Watchlist
 
 
 def index(request):
@@ -102,21 +105,20 @@ def newListing(request):
             return render(request, "auctions/newListing.html", {
         "message": "Starting Bid Needed"
         })
+
+        if category and url:
+            new_listing = Listings(title=title, description=description, photo=url, category=category, starting_bid=starting_bid, number_of_bids=0)
+            new_listing.save()
         
         if not url:
-            new_listing = Listings(title=title, description=description, category=category, starting_bid=starting_bid)
+            new_listing = Listings(title=title, description=description, category=category, starting_bid=starting_bid, number_of_bids=0)
             new_listing.save()
         
-        elif not category:
-            new_listing = Listings(title=title, description=description, url=url, starting_bid=starting_bid)
+        if not category:
+            new_listing = Listings(title=title, description=description, photo=url, starting_bid=starting_bid, number_of_bids=0)
             new_listing.save()
 
-        else:
-            new_listing = Listings(title=title, description=description, url=url, category=category, starting_bid=starting_bid)
-            new_listing.save()
-
-
-
+        
         return HttpResponseRedirect(reverse("index"))
     
     else:
@@ -125,10 +127,21 @@ def newListing(request):
 
 def listing(request, title):
 
-    #Returns all of the info of the listing model. Title, Description, Photo Url, Category, and Starting Bid
-    return render(request, "auctions/auctions.html", {
-        "info": Listings.objects.get(title=title),
-    })
+    try:
+        bid_info = Bids.objects.filter(item=title).latest('id')
+
+        #Returns all of the info of the listing model. Title, Description, Photo Url, Category, and Starting Bid
+        return render(request, "auctions/auctions.html", {
+            "listing_info": Listings.objects.get(title=title),
+            "bid_info": bid_info
+        })
+    except ObjectDoesNotExist:
+        bid_info = None
+        
+        return render(request, "auctions/auctions.html", {
+                "listing_info": Listings.objects.get(title=title),
+                "bid_info": bid_info
+            })
 
 def new_bid(request):
     if request.method == "POST":
@@ -137,29 +150,113 @@ def new_bid(request):
         current_bid = Listings.objects.get(title=title)
 
         # We need to make the new bid into a float (originally a string)
-        # We then need to compare the new bid passed to the current bid
-        # If the new bid is greater update if not error
         new_bid = float(new_bid)
+
+        #Get User objects
+        user = request.user.get_username()
+
+        if user is not "":
+            # We then need to compare the new bid passed to the current bid
+            # If the new bid is greater update if not error
+            if new_bid <= current_bid.starting_bid:
+                return render(request, "auctions/auctions.html", {
+                    "listing_info": Listings.objects.get(title=title),
+                    "message": "New Bid MUST be larger than current bid"
+                })
+
+            #Now that all of the bid info has been gotten, make a bid object then save it
+            bid_object = Bids(bid_amount=new_bid, name=user, item=title)
+            bid_object.save()
+
+            #TODO Make User info model work
+
+            # Increase number of bids
+            current_bid.number_of_bids = current_bid.number_of_bids + 1
+            current_bid.save()
+
+            #Assign and save new bid
+            current_bid.starting_bid = new_bid
+            current_bid.save()
+
+            #Update number of bids
+            return HttpResponseRedirect(reverse("index"))
         
-        if new_bid <= current_bid.starting_bid:
-            return render(request, "auctions/auctions.html", {
-                "info": Listings.objects.get(title=title),
-                "message": "New Bid MUST be larger than current bid"
+        else:
+            return render(request, "auctions/login.html", {
+                "message": "Must Be Logged In to Place Bids"
             })
-        
-        #Now that all of the bid info has been gotten, make a bid object
-        # Bids(new_bid, NameOfUser, title)
-
-        #TODO Make User info model work
-
-        #Assign and save new bid
-        current_bid.starting_bid = new_bid
-        current_bid.save()
-
-        #Update number of bids
-
-        return HttpResponseRedirect(reverse("index"))
     
     return render(request, "auctions/auctions.html", {
-        "info": Listings.objects.get(title=title)
+        "listing_info": Listings.objects.get(title=title)
     })
+
+
+def category_view(request):
+    # Make a new list of all of the non repeating categories
+    category_list = []
+    for objects in Listings.objects.all():
+        # if object in category_list:
+        if objects.category not in category_list:
+            category_list.append(objects.category)
+
+    return render(request, "auctions/category_list.html", {
+        "info": category_list,
+    })
+
+def watchlist(request):
+
+    if request.method == "POST":
+        title = request.POST["title"]
+
+        if not Watchlist.objects.filter(listing=title):
+            new_item = Watchlist(pk=title ,listing=title, addRemove=True)
+            new_item.save()
+
+        else:
+            for objects in Watchlist.objects.filter(listing=title):
+                if objects.listing == title and objects.addRemove == True:
+                    Watchlist(listing=title).delete()
+
+
+    try:
+        watchlist = Watchlist.objects.all()
+        titles = []
+        listing = []
+    
+        for objects in watchlist:
+            titles.append(objects.listing)
+
+        for title in titles:
+            listing.append(Listings.objects.get(title=title))
+
+        return render(request, "auctions/watchlist.html", {
+            "watchlist_items": Watchlist.objects.all().reverse(),
+            "watchlist_items_info": listing
+        })
+        
+    except OperationalError:
+        return render(request, "auctions/watchlist.html", {
+            "watchlist_items": None
+        })
+    
+def category_listings(request, category):
+    return render(request, "auctions/category.html", {
+        "listing": Listings.objects.filter(category=category),
+        "category": category
+    })
+
+def search(request):
+    if request.method == "POST":
+        query = request.POST["query"]
+        objects = Listings.objects.all()
+
+        titles = []
+
+        for listings in objects:
+            if query.lower() in listings.title.lower():
+                titles.append(listings)
+            
+
+        return render(request, "auctions/search.html", {
+            "query": titles
+        })
