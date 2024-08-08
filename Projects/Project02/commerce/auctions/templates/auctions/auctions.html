@@ -62,9 +62,16 @@
         <div class="item_category">
             Category: {{ listing_info.category }}
         </div>
+
+        <div class="item_comments">
+            <h5>Comments:</h5>
+
+            <form action="{% url 'index' %}">
+                <textarea name="comment_text" id="comment_text" placeholder="Leave a Comment"></textarea>
+                <input type="submit" name="comment_submit_btn" value="Comment">
+            </form>
+        </div>
+
     </div>
-    
-
-
 {% endblock %}
 

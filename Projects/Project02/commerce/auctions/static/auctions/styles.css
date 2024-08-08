@@ -87,3 +87,12 @@ body {
     margin-bottom: 10px;
     width: 100%;
 }
+
+.item_comments{
+    margin-top: 20px;
+}
+
+#comment_text{
+    width: 100%;
+    max-height: 50px;
+}
