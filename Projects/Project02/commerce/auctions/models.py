@@ -32,8 +32,9 @@ class Bids(models.Model):
     # Item Being Bid On
 
     bid_amount = models.FloatField(max_length=10, blank=False, default=0)
-    name = models.CharField(max_length=64, blank=False, default=None)
     item = models.CharField(max_length=64, blank=False, default=None)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    time_of_bid = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"Item: {self.item}"
@@ -44,16 +45,20 @@ class Comments(models.Model):
     # The Comment Itself
     # The Item the Comment is On
 
-    name = models.CharField(max_length=64, default=None)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     comment = models.TextField(max_length=1000, default=None)
+    auction = models.ForeignKey(Listings, on_delete=models.CASCADE)
+    time_of_comment = models.DateTimeField(auto_now_add=True)
 
 class Watchlist(models.Model):
     # Think of what info you might need for a watchlist
     # Title of Listing
     # A bool to check if the item is in watchlist already to add and remove from watchlist
 
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     listing = models.CharField(primary_key="title", max_length=64, blank=True, default="")
     addRemove = models.BooleanField(default=False)
+
 
     def __str__(self):
         return self.listing

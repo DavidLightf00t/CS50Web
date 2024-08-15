@@ -32,7 +32,7 @@
                 0 bids so far. No current bidder
 
             {% else %}
-                <!-- Add Number of Bids on Particular Item to Models -->  {{ listing_info.number_of_bids }} bid(s) so far. <a href="{% url 'listing' listing_info.title %}">{{ bid_info.name }}</a> is the current bidder
+                <!-- Add Number of Bids on Particular Item to Models -->  {{ listing_info.number_of_bids }} bid(s) so far. <a href="{% url 'listing' listing_info.title %}">{{ bid_info.user }}</a> is the current bidder. 
                 <!-- Add If Statement to see if the signed in user is the current bidder to display "Your bid is the current bid"-->
                 <!-- Else Display "*USERNAME* is the current bidder" -->
             {% endif %}
