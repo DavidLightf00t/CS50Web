@@ -31,9 +31,9 @@ class Bids(models.Model):
     # Name of Bidder
     # Item Being Bid On
 
+    bidder = models.ForeignKey(User, on_delete=models.CASCADE)
     bid_amount = models.FloatField(max_length=10, blank=False, default=0)
     item = models.CharField(max_length=64, blank=False, default=None)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
     time_of_bid = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -45,9 +45,9 @@ class Comments(models.Model):
     # The Comment Itself
     # The Item the Comment is On
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    commenter = models.ForeignKey(User, on_delete=models.CASCADE)
     comment = models.TextField(max_length=1000, default=None)
-    auction = models.ForeignKey(Listings, on_delete=models.CASCADE)
+    auction = models.ForeignKey(Listings, on_delete=models.CASCADE, default=None)
     time_of_comment = models.DateTimeField(auto_now_add=True)
 
 class Watchlist(models.Model):
@@ -55,8 +55,8 @@ class Watchlist(models.Model):
     # Title of Listing
     # A bool to check if the item is in watchlist already to add and remove from watchlist
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    listing = models.CharField(primary_key="title", max_length=64, blank=True, default="")
+    watcher = models.ForeignKey(User, on_delete=models.CASCADE)
+    listing = models.ForeignKey(Listings, on_delete=models.CASCADE, primary_key="listing")
     addRemove = models.BooleanField(default=False)
 
 
