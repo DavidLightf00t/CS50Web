@@ -32,9 +32,7 @@
                 0 bids so far. No current bidder
 
             {% else %}
-                <!-- Add Number of Bids on Particular Item to Models -->  {{ listing_info.number_of_bids }} bid(s) so far. <a href="{% url 'listing' listing_info.title %}">{{ bid_info.user }}</a> is the current bidder. 
-                <!-- Add If Statement to see if the signed in user is the current bidder to display "Your bid is the current bid"-->
-                <!-- Else Display "*USERNAME* is the current bidder" -->
+                {{ listing_info.number_of_bids }} bid(s) so far. <a href="{% url 'listing' listing_info.title %}">{{ bid_info.bidder }}</a> is the current bidder. 
             {% endif %}
 
              
@@ -44,7 +42,7 @@
 
             <form action="{% url 'new_bid' %}" method="post">
                 {% csrf_token %}
-                <input type="text" name="title" id="title" hidden value="{{ listing_info.title }}">
+                <input type="text" name="listing_id" id="listing_id" hidden value="{{ listing_info.listing_id }}">
                 <input type="number" name="bid" id="new_bid" placeholder="Bid" >
                 <input type="submit" class="btn btn-primary" id="place_bid_btn" value="Place Bid">
             </form>
@@ -52,7 +50,7 @@
             <div class="new_watchlist_item">
                 <form action="{% url 'watchlist' %}" method="post">
                     {% csrf_token %}
-                    <input type="text" name="title" id="title" hidden value="{{ listing_info.title }}">
+                    <input type="text" name="listing_id" id="listing_id" hidden value="{{ listing_info.listing_id }}">
                     <input type="submit" class="btn-check" id="watchlist_btn" value="♡ Watchlist">
                 </form>
             </div>

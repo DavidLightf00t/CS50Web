@@ -8,7 +8,7 @@
 
         <div class="active_listings">
 
-            <a href="{% url 'listing' listings.title %}" id="active_listing_link">
+            <a href="{% url 'listing' listings.listing_id %}" id="active_listing_link">
 
                 <div class="index_item_photo" id="active_listing_photo">
                     <img src="{{listings.photo}}">
