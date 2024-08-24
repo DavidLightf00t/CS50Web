@@ -32,7 +32,8 @@
                 0 bids so far. No current bidder
 
             {% else %}
-                {{ listing_info.number_of_bids }} bid(s) so far. <a href="{% url 'listing' listing_info.title %}">{{ bid_info.bidder }}</a> is the current bidder. 
+                {{ listing_info.number_of_bids }} bid(s) so far. 
+                <a href="{% url 'user_profile' bid_info.bidder %}">{{ bid_info.bidder }}</a> is the current bidder. 
             {% endif %}
 
              
