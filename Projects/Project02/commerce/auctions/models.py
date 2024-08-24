@@ -13,6 +13,7 @@ class Listings(models.Model):
     # Picture
     # Time the listing was made
 
+    lister = models.ForeignKey(User, on_delete=models.CASCADE)
     listing_id = models.CharField(max_length=64, primary_key=True)
     title = models.CharField(max_length=64, blank=False)
     description = models.TextField(blank=False)
@@ -56,8 +57,8 @@ class Watchlist(models.Model):
     # Title of Listing
     # A bool to check if the item is in watchlist already to add and remove from watchlist
 
-    watcher = models.ForeignKey(User, on_delete=models.CASCADE)
     listing = models.ForeignKey(Listings, on_delete=models.CASCADE)
+    watcher = models.ManyToManyField(User, blank=True)
     addRemove = models.BooleanField(default=False)
 
 
