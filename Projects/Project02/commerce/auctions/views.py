@@ -119,6 +119,7 @@ def newListing(request):
         "message": "Starting Bid Needed"
         })
 
+
         if category and url:
             new_listing = Listings(lister=user, listing_id=unique_id, title=title, description=description, photo=url, category=category, starting_bid=starting_bid, number_of_bids=0)
             new_listing.save()
@@ -182,6 +183,7 @@ def new_bid(request):
         if new_bid <= listing.starting_bid:
             return render(request, "auctions/auctions.html", {
                 "listing_info": Listings.objects.get(listing_id=listing_id),
+                "bid_info": Bids.objects.filter(listing=listing).latest('id'),
                 "message": "New Bid MUST be larger than current bid"
             })
 
@@ -199,8 +201,12 @@ def new_bid(request):
         listing.starting_bid = new_bid
         listing.save()
 
-        #Update number of bids
-        return HttpResponseRedirect(reverse("index"))
+        
+        return render(request, "auctions/auctions.html", {
+            "listing_info": Listings.objects.get(listing_id=listing_id),
+            "bid_info": Bids.objects.filter(listing=listing).latest('id'),
+            "comment_info": Comments.objects.filter(listing=listing)
+            })
     
     
     return render(request, "auctions/auctions.html", {
@@ -226,9 +232,13 @@ def watchlist(request):
     #If they dont create a new object with their credentials
     
     #If it is a get request, go filter the objects that have the users username and display
-
-    user = request.user.get_username()
-    user_object = User.objects.get(username=user)
+    try: 
+        user = request.user.get_username()
+        user_object = User.objects.get(username=user)
+    except User.DoesNotExist:
+        return render(request, "auctions/login.html", {
+            "message": "Cannot Watch an Item Without Being Logged In"
+        })
 
     if request.method == "POST":
         listing_id = request.POST["listing_id"]
