@@ -60,8 +60,9 @@
 
         <hr>
 
-        <div class="item_category">
+        <div class="item_info">
             Category: {{ listing_info.category }}
+            Lister: 
         </div>
 
         <hr>
@@ -73,19 +74,28 @@
                 </div>
             {% endif %}
 
+            <h5>Leave a Comment:</h5>
+
             <form action="{% url 'new_comment' %}" method="post">
                 {% csrf_token %}
                 <input type="text", name="listing_id", id="listing_id", hidden value="{{ listing_info.listing_id }}">
-                <textarea name="comment_content" id="comment_content" placeholder="Leave a Comment"></textarea>
+                <textarea name="comment_content" id="comment_content" placeholder="Comment here..."></textarea>
                 <input type="submit" name="comment_submit_btn" value="Comment">
             </form>
 
+            <br>
+
             <h5>Comments:</h5>
 
+            <hr>
+
             {% for comments in comment_info %}
-                <p><a href="{% url 'user_profile' comments.commenter%}">{{comments.commenter}}</a>: {{ comments.comment }}
-                    {{ comments.time_of_comment }}
-                </p>
+                <a href="{% url 'user_profile' comments.commenter%}">{{comments.commenter}}</a> · {{ comments.time_of_comment }}
+                <div class="comment">
+                    {{ comments.comment }} 
+                </div>
+             
+                <hr>
             {% endfor %}
 
             
