@@ -52,6 +52,9 @@ class Comments(models.Model):
     listing = models.ForeignKey(Listings, on_delete=models.CASCADE, default=None)
     time_of_comment = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self):
+        return f"Comment on {self.listing} by {self.commenter}"
+
 class Watchlist(models.Model):
     # Think of what info you might need for a watchlist
     # Title of Listing

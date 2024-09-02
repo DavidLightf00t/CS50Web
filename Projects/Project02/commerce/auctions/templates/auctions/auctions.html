@@ -58,17 +58,37 @@
 
         </div>
 
+        <hr>
+
         <div class="item_category">
             Category: {{ listing_info.category }}
         </div>
 
-        <div class="item_comments">
-            <h5>Comments:</h5>
+        <hr>
 
-            <form action="{% url 'index' %}">
-                <textarea name="comment_text" id="comment_text" placeholder="Leave a Comment"></textarea>
+        <div class="item_comments">
+            {% if comment_message %}
+                <div class="alert-info">
+                    {{ comment_message }}
+                </div>
+            {% endif %}
+
+            <form action="{% url 'new_comment' %}" method="post">
+                {% csrf_token %}
+                <input type="text", name="listing_id", id="listing_id", hidden value="{{ listing_info.listing_id }}">
+                <textarea name="comment_content" id="comment_content" placeholder="Leave a Comment"></textarea>
                 <input type="submit" name="comment_submit_btn" value="Comment">
             </form>
+
+            <h5>Comments:</h5>
+
+            {% for comments in comment_info %}
+                <p><a href="{% url 'user_profile' comments.commenter%}">{{comments.commenter}}</a>: {{ comments.comment }}
+                    {{ comments.time_of_comment }}
+                </p>
+            {% endfor %}
+
+            
         </div>
 
     </div>

@@ -303,3 +303,41 @@ def user_profile(request, user):
         "user_listings": Listings.objects.filter(lister=user_info.id),
         "user_info": user_info
     })
+
+def new_comment(request):
+    if request.method == "POST":
+        print("Hello There")
+        try: 
+            user = request.user.get_username()
+            user_object = User.objects.get(username=user)
+        except User.DoesNotExist:
+            return render(request, "auctions/login.html", {
+                "message": "Cannot Comment on an Item Without Being Logged In"
+            })
+
+        comment_content = request.POST["comment_content"]
+        listing_id = request.POST["listing_id"]
+        listing = Listings.objects.get(listing_id=listing_id)
+        print(comment_content)
+        
+        if comment_content == "":
+            return render(request, "auctions/auctions.html", {
+                "listing_info": Listings.objects.get(listing_id=listing_id),
+                "bid_info": Bids.objects.filter(listing=listing).latest('id'),
+                "comment_info": Comments.objects.filter(listing=listing),
+                "comment_message": "A Comment MUST be Longer than 0 Characters"
+            })
+        
+        new_comment = Comments(commenter=user_object, comment=comment_content, listing=listing)
+        new_comment.save()
+
+        print(comment_content)
+        # return render(request, "auctions/auctions.html", {
+        #     "listing_info": Listings.objects.get(listing_id=listing_id),
+        #     "bid_info": Bids.objects.filter(listing=listing).latest('id'),
+        #     "comment_info": Comments.objects.filter(listing=listing),
+        # })
+        return HttpResponseRedirect(reverse("index"))
+        print(comment_content)
+
+    return HttpResponseRedirect(reverse("index"))
