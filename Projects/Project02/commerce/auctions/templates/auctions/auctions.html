@@ -1,6 +1,6 @@
-{% extends "auctions/layout.html" %}
-
 {% block body %}
+
+    {% include 'auctions/layout.html' with number_of_watchers=number_of_watchers %}
 
     <h2>Listing: {{ listing_info.title }} </h2>
 
@@ -102,5 +102,5 @@
         </div>
 
     </div>
-{% endblock %}
+{% endblock %}a5ww368j"?
 

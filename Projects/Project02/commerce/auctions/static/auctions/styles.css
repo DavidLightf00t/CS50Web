@@ -96,3 +96,8 @@ body {
     width: 100%;
     max-height: 50px;
 }
+
+.watcher_count {
+    display: inline;
+    margin-right: 5px; /* Adjust the spacing as needed */
+}

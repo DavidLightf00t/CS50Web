@@ -13,13 +13,14 @@ from .models import User, Listings, Bids, Comments, Watchlist
 
 
 def index(request):
-    objects = Listings.objects.all()
+    # watchers_list = Watchlist.objects.get(listing=listing)
 
-    for listings in objects:
-        print(listings.listing_id)
+    # number_of_watchers = watchers_list.watcher.count()
+    # print(number_of_watchers)
 
     return render(request, "auctions/index.html", {
-        "auctions": Listings.objects.all()
+        "auctions": Listings.objects.all(),
+        "watchlist": Watchlist.objects.all()
     })
 
 
@@ -140,24 +141,27 @@ def newListing(request):
     
 
 def listing(request, listing_id):
-    try:
-        listing = Listings.objects.get(listing_id=listing_id)
-        bid_info = Bids.objects.filter(listing=listing).latest('id')
-        comment_info = Comments.objects.filter(listing=listing)
+    listing = Listings.objects.get(listing_id=listing_id)
+    comment_info = Comments.objects.filter(listing=listing)
+    number_of_watchers = 0
+    watchers_list = Watchlist.objects.get(listing=listing)
 
-        #Returns all of the info of the listing model. Title, Description, Photo Url, Category, and Starting Bid
-        return render(request, "auctions/auctions.html", {
-            "listing_info": Listings.objects.get(listing_id=listing_id),
-            "bid_info": bid_info,
-            "comment_info": comment_info
-        })
+    number_of_watchers = watchers_list.watcher.count()
+    print(number_of_watchers)
+
+    try: 
+        bid_info = Bids.objects.filter(listing=listing).latest('id')
     except ObjectDoesNotExist:
         bid_info = None
-        
-        return render(request, "auctions/auctions.html", {
-                "listing_info": Listings.objects.get(listing_id=listing_id),
-                "bid_info": bid_info
-            })
+    
+
+    #Returns all of the info of the listing model. Title, Description, Photo Url, Category, and Starting Bid
+    return render(request, "auctions/auctions.html", {
+        "listing_info": Listings.objects.get(listing_id=listing_id),
+        "bid_info": bid_info,
+        "comment_info": comment_info,
+        "number_of_watchers": number_of_watchers
+    })
 
 def new_bid(request):
     if request.method == "POST":
@@ -331,13 +335,10 @@ def new_comment(request):
         new_comment = Comments(commenter=user_object, comment=comment_content, listing=listing)
         new_comment.save()
 
-        print(comment_content)
-        # return render(request, "auctions/auctions.html", {
-        #     "listing_info": Listings.objects.get(listing_id=listing_id),
-        #     "bid_info": Bids.objects.filter(listing=listing).latest('id'),
-        #     "comment_info": Comments.objects.filter(listing=listing),
-        # })
-        return HttpResponseRedirect(reverse("index"))
-        print(comment_content)
+        return render(request, "auctions/auctions.html", {
+            "listing_info": Listings.objects.get(listing_id=listing_id),
+            "bid_info": Bids.objects.filter(listing=listing).latest('id'),
+            "comment_info": Comments.objects.filter(listing=listing),
+        })
 
     return HttpResponseRedirect(reverse("index"))
