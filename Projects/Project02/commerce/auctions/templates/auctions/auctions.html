@@ -1,9 +1,8 @@
 {% block body %}
 
-    {% include 'auctions/layout.html' with number_of_watchers=number_of_watchers %}
+    {% include 'auctions/layout.html' with number_of_watched_items=number_of_watched_items %}
 
     <h2>Listing: {{ listing_info.title }} </h2>
-
         {% if message %}
             <div class="alert-info">
                 {{ message }}
@@ -61,8 +60,9 @@
         <hr>
 
         <div class="item_info">
+            Lister: {{ listing_info.lister }}
             Category: {{ listing_info.category }}
-            Lister: 
+            Number of Watchers: {{ number_of_watchers }}
         </div>
 
         <hr>

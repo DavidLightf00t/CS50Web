@@ -141,13 +141,25 @@ def newListing(request):
     
 
 def listing(request, listing_id):
+    try:
+        user = request.user.get_username()
+        user = User.objects.get(username=user)
+        watchlist_object = Watchlist.objects.filter(watcher=user)
+        number_of_watched_items = watchlist_object.count()
+        print(number_of_watched_items)
+    except User.DoesNotExist:
+        number_of_watched_items = 0
+
     listing = Listings.objects.get(listing_id=listing_id)
     comment_info = Comments.objects.filter(listing=listing)
-    number_of_watchers = 0
     watchers_list = Watchlist.objects.get(listing=listing)
+    number_of_watchers = 0
+    
 
     number_of_watchers = watchers_list.watcher.count()
     print(number_of_watchers)
+
+    
 
     try: 
         bid_info = Bids.objects.filter(listing=listing).latest('id')
@@ -160,7 +172,8 @@ def listing(request, listing_id):
         "listing_info": Listings.objects.get(listing_id=listing_id),
         "bid_info": bid_info,
         "comment_info": comment_info,
-        "number_of_watchers": number_of_watchers
+        "number_of_watchers": number_of_watchers,
+        "number_of_watched_items": number_of_watched_items
     })
 
 def new_bid(request):

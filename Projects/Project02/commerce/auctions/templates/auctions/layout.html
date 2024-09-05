@@ -27,7 +27,7 @@
             {% if user.is_authenticated %}
                 <li class="nav-item d-flex align-items-center">
                     <a class="nav-link" href="{% url 'watchlist' %}">Watchlist</a> 
-                    <span class="watcher_count">({{ number_of_watchers }})</span>
+                    <span class="watcher_count">({{ number_of_watched_items }})</span>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'newListing' %}">Create New Listing</a>
