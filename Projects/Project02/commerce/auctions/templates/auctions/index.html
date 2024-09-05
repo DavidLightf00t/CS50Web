@@ -11,27 +11,33 @@
     </div>
 
     {% for listings in auctions %}
+            <div class="active_listings">
 
-        <div class="active_listings">
+                <a href="{% url 'listing' listings.listing_id %}" id="active_listing_link">
+                    <div class="index_item_photo" id="active_listing_photo">
+                        <img src="{{listings.photo}}">
+                    </div>
 
-            <a href="{% url 'listing' listings.listing_id %}" id="active_listing_link">
-                <div class="index_item_photo" id="active_listing_photo">
-                    <img src="{{listings.photo}}">
-                </div>
+                    <div id="active_listing_info">
+                        {{listings.title}}
 
-                <div id="active_listing_info">
-                    {{listings.title}}
+                    <br>
+                        Price: ${{listings.starting_bid|floatformat:2}}
+                    <br>
+                        Listed: {{listings.time_of_listing}}
+                    <br>
+                {% for watchlists in watchlist %}
+                    {% if watchlists.listing == listings %}
 
-                <br>
-                    Price: ${{listings.starting_bid|floatformat:2}}
-                <br>
-                    Listed: {{listings.time_of_listing}}
-                
-                </div>
-            </a>
+                        Number of Watchers: {{watchlists.watcher.count}}
 
-        </div>
+                    {% endif %}
 
+                {% endfor %}
+                    </div>
+                </a>
+
+            </div>
     {% endfor %}
     
 {% endblock %}
