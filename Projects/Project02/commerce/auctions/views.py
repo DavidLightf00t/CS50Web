@@ -178,13 +178,6 @@ def listing(request, listing_id):
 
 def new_bid(request):
     if request.method == "POST":
-        listing_id = request.POST["listing_id"]
-        new_bid = request.POST["bid"]
-        listing = Listings.objects.get(listing_id=listing_id)
-
-        # We need to make the new bid into a float (originally a string)
-        new_bid = float(new_bid)
-
         try:
             #Get User objects
             user = request.user.get_username()
@@ -194,6 +187,15 @@ def new_bid(request):
             return render(request, "auctions/login.html", {
                 "message": "Must be Logged in to Place Bids"
             })
+        
+        listing_id = request.POST["listing_id"]
+        new_bid = request.POST["bid"]
+        listing = Listings.objects.get(listing_id=listing_id)
+
+        # We need to make the new bid into a float (originally a string)
+        new_bid = float(new_bid)
+
+        
 
         # We then need to compare the new bid passed to the current bid
         # If the new bid is greater update if not error
