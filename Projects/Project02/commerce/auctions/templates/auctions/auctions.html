@@ -60,9 +60,9 @@
         <hr>
 
         <div class="item_info">
-            Lister: {{ listing_info.lister }}
-            Category: {{ listing_info.category }}
-            Number of Watchers: {{ number_of_watchers }}
+            <p>Lister: <a href="{% url 'user_profile' listing_info.lister %}">{{ listing_info.lister }}</a></p>
+            <p>Category: {{ listing_info.category }}</p>
+            <p>Number of Watchers: {{ number_of_watchers }}</p>
         </div>
 
         <hr>
@@ -102,5 +102,5 @@
         </div>
 
     </div>
-{% endblock %}a5ww368j"?
+{% endblock %}
 
