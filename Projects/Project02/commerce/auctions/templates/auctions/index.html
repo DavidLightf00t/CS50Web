@@ -20,20 +20,19 @@
 
                     <div id="active_listing_info">
                         {{listings.title}}
-
-                    <br>
+                        <br>
                         Price: ${{listings.starting_bid|floatformat:2}}
-                    <br>
+                        <br>
                         Listed: {{listings.time_of_listing}}
-                    <br>
-                {% for watchlists in watchlist %}
-                    {% if watchlists.listing == listings %}
+                        <br>
 
-                        Number of Watchers: {{watchlists.watcher.count}}
+                        {% for watchlists in watchlist %}
+                            {% if watchlists.listing == listings %}
 
-                    {% endif %}
+                            Number of Watchers: {{watchlists.watcher.count}}
 
-                {% endfor %}
+                            {% endif %}
+                        {% endfor %}
                     </div>
                 </a>
 

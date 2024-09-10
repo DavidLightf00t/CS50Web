@@ -14,15 +14,16 @@ body {
 
 }
 
-.index_item_photo{
+.index_item_photo img{
     height: 200px;
     width: 250px;
     text-align: center;
     overflow: hidden;
     vertical-align: middle;
-    padding-left: 10px;}
+    padding-left: 10px;
+}
 
-.index_item_photo img{
+.index_item_photo{
     max-width: 100%;
     max-height: 100%;
     object-fit: cover;
@@ -40,18 +41,21 @@ body {
 
 #active_listing_link{
     color: black;
+    width: 100%;
 }
 
 #active_listing_photo{
     display: table-cell;
     width: 33%;
+    text-align: middle;
+    
 }
 
 #active_listing_info{
     display: table-cell;
     width: 67%;
     padding-left: 5%;
-    vertical-align: top;
+    vertical-align: middle;
     line-height: 50px;
 }
 
@@ -99,5 +103,4 @@ body {
 
 .watcher_count {
     display: inline;
-    margin-right: 0px; /* Adjust the spacing as needed */
 }
