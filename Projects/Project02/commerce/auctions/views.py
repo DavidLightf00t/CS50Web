@@ -13,16 +13,25 @@ from .models import User, Listings, Bids, Comments, Watchlist
 
 
 def index(request):
-    # watchers_list = Watchlist.objects.get(listing=listing)
-
-    # number_of_watchers = watchers_list.watcher.count()
-    # print(number_of_watchers)
+    user = request.user.get_username()
+    number_of_watched_items = number_watched_items(user)
 
     return render(request, "auctions/index.html", {
         "auctions": Listings.objects.all(),
-        "watchlist": Watchlist.objects.all()
+        "watchlist": Watchlist.objects.all(),
+        "number_of_watched_items": number_of_watched_items
     })
 
+def number_watched_items(user):
+    number_of_watched_items = 0
+    try:
+        user = User.objects.get(username=user)
+        watchlist_object = Watchlist.objects.filter(watcher=user)
+        number_of_watched_items = watchlist_object.count()
+    except User.DoesNotExist:
+        number_of_watched_items = 0
+
+    return number_of_watched_items
 
 def login_view(request):
     if request.method == "POST":
@@ -99,25 +108,30 @@ def newListing(request):
 
         user = request.user.get_username()
         user = User.objects.get(username=user)
+        number_of_watched_items = number_watched_items(user)
 
         if not title:
             return render(request, "auctions/newListing.html", {
-        "message": "Title Needed"
+        "message": "Title Needed",
+        "number_of_watched_items": number_of_watched_items
         })
 
         if not description:
             return render(request, "auctions/newListing.html", {
-        "message": "Description Needed"
+        "message": "Description Needed",
+        "number_of_watched_items": number_of_watched_items
         })
 
         if not url and not category:
             return render(request, "auctions/newListing.html", {
-        "message": "Url and/or Category Needed"
+        "message": "Url and/or Category Needed",
+        "number_of_watched_items": number_of_watched_items
         })
 
         if not starting_bid:
             return render(request, "auctions/newListing.html", {
-        "message": "Starting Bid Needed"
+        "message": "Starting Bid Needed",
+        "number_of_watched_items": number_of_watched_items
         })
 
 
@@ -137,35 +151,31 @@ def newListing(request):
         return HttpResponseRedirect(reverse("index"))
     
     else:
-        return render(request, "auctions/newListing.html")
+        user = request.user.get_username()
+        number_of_watched_items = number_watched_items(user)
+
+        return render(request, "auctions/newListing.html", {
+            "number_of_watched_items": number_of_watched_items
+        })
     
 
 def listing(request, listing_id):
-    try:
-        user = request.user.get_username()
-        user = User.objects.get(username=user)
-        watchlist_object = Watchlist.objects.filter(watcher=user)
-        number_of_watched_items = watchlist_object.count()
-        print(number_of_watched_items)
-    except User.DoesNotExist:
-        number_of_watched_items = 0
-
+    user = request.user.get_username()
+    number_of_watched_items = number_watched_items(user)
     listing = Listings.objects.get(listing_id=listing_id)
-    comment_info = Comments.objects.filter(listing=listing)
-    watchers_list = Watchlist.objects.get(listing=listing)
-    number_of_watchers = 0
-    
-
-    number_of_watchers = watchers_list.watcher.count()
-    print(number_of_watchers)
-
-    
+        
+    try:
+        watchers_list = Watchlist.objects.get(listing=listing)
+        number_of_watchers = watchers_list.watcher.count()
+    except ObjectDoesNotExist:
+        number_of_watchers = 0
 
     try: 
         bid_info = Bids.objects.filter(listing=listing).latest('id')
     except ObjectDoesNotExist:
         bid_info = None
     
+    comment_info = Comments.objects.filter(listing=listing)
 
     #Returns all of the info of the listing model. Title, Description, Photo Url, Category, and Starting Bid
     return render(request, "auctions/auctions.html", {
@@ -241,8 +251,12 @@ def category_view(request):
         if objects.category not in category_list:
             category_list.append(objects.category)
 
+    user = request.user.get_username()
+    number_of_watched_items = number_watched_items(user)
+
     return render(request, "auctions/category_list.html", {
         "info": category_list,
+        "number_of_watched_items": number_of_watched_items
     })
 
 def watchlist(request):
@@ -274,32 +288,38 @@ def watchlist(request):
             
 
         else:
-            print("False")
             for objects in Watchlist.objects.filter(listing=listing).filter(watcher=user_object.id):
-                print(objects, objects.listing, objects.watcher)
                 obj = Watchlist.objects.get(listing=listing)
                 obj.watcher.remove(user_object.id)
 
-                print(obj.watcher)
-
+    number_of_watched_items = number_watched_items(user)
 
     try:
         return render(request, "auctions/watchlist.html", {
             "watchlist_items": Watchlist.objects.filter(watcher=user_object),
+            "number_of_watched_items": number_of_watched_items
         })
         
     except OperationalError:
         return render(request, "auctions/watchlist.html", {
-            "watchlist_items": None
+            "watchlist_items": None,
+            "number_of_watched_items": number_of_watched_items
         })
     
 def category_listings(request, category):
+    user = request.user.get_username()
+    number_of_watched_items = number_watched_items(user)
+
     return render(request, "auctions/category.html", {
         "listing": Listings.objects.filter(category=category),
-        "category": category
+        "category": category,
+        "number_of_watched_items": number_of_watched_items
     })
 
 def search(request):
+    user = request.user.get_username()
+    number_of_watched_items = number_watched_items(user)
+
     if request.method == "POST":
         query = request.POST["query"]
         objects = Listings.objects.all()
@@ -312,15 +332,23 @@ def search(request):
             
 
         return render(request, "auctions/search.html", {
-            "query": titles
+            "query": titles,
+            "number_of_watched_items": number_of_watched_items
+        })
+    
+    else:
+        return render(request, "auctions/index.html", {
+            "number_of_watched_items": number_of_watched_items
         })
     
 def user_profile(request, user):
     user_info = User.objects.get(username=user)
+    number_of_watched_items = number_watched_items(user)
 
     return render(request, "auctions/user_profile.html", {
         "user_listings": Listings.objects.filter(lister=user_info.id),
-        "user_info": user_info
+        "user_info": user_info,
+        "number_of_watched_items": number_of_watched_items
     })
 
 def new_comment(request):
