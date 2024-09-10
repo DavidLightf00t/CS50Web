@@ -22,6 +22,7 @@ class Listings(models.Model):
     starting_bid = models.FloatField(max_length=64, default=0, blank=False)
     number_of_bids = models.IntegerField(default=0)
     time_of_listing = models.DateTimeField(auto_now_add=True)
+    active = models.BooleanField(default=True, blank=False)
 
     # How the object names itself in the admin dashboard
     def __str__(self):

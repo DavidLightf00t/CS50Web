@@ -16,4 +16,5 @@ urlpatterns = [
     path("search/", views.search, name="search"),
     path("user/<str:user>", views.user_profile, name="user_profile"),
     path("comment/", views.new_comment, name="new_comment"),
+    path("AuctionEnded/<str:listing_id>", views.end_auction, name="end_auction")
 ]

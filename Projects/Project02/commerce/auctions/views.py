@@ -22,16 +22,6 @@ def index(request):
         "number_of_watched_items": number_of_watched_items
     })
 
-def number_watched_items(user):
-    number_of_watched_items = 0
-    try:
-        user = User.objects.get(username=user)
-        watchlist_object = Watchlist.objects.filter(watcher=user)
-        number_of_watched_items = watchlist_object.count()
-    except User.DoesNotExist:
-        number_of_watched_items = 0
-
-    return number_of_watched_items
 
 def login_view(request):
     if request.method == "POST":
@@ -161,8 +151,19 @@ def newListing(request):
 
 def listing(request, listing_id):
     user = request.user.get_username()
+
+    try:
+        user_object = User.objects.get(username=user)
+    except User.DoesNotExist:
+        user_object = None
+
+
     number_of_watched_items = number_watched_items(user)
     listing = Listings.objects.get(listing_id=listing_id)
+    end_auction = False
+
+    if user_object == listing.lister:
+        end_auction = True
         
     try:
         watchers_list = Watchlist.objects.get(listing=listing)
@@ -183,29 +184,85 @@ def listing(request, listing_id):
         "bid_info": bid_info,
         "comment_info": comment_info,
         "number_of_watchers": number_of_watchers,
-        "number_of_watched_items": number_of_watched_items
+        "number_of_watched_items": number_of_watched_items,
+        "end_auction": end_auction
+    })
+
+def end_auction(request, listing_id):
+    auction = Listings.objects.get(listing_id=listing_id)
+    auction.active = False
+    auction.save()
+
+    user = request.user.get_username()
+    number_of_watched_items = number_watched_items(user)
+    comment_info = Comments.objects.filter(listing=auction)
+
+    try:
+        watchers_list = Watchlist.objects.get(listing=auction)
+        number_of_watchers = watchers_list.watcher.count()
+    except ObjectDoesNotExist:
+        number_of_watchers = 0
+
+    try: 
+        bid_info = Bids.objects.filter(listing=auction).latest('id')
+    except ObjectDoesNotExist:
+        bid_info = None
+
+    try:
+        user_object = User.objects.get(username=user)
+    except User.DoesNotExist:
+        user_object = None
+    
+
+    return render(request, "auctions/end_auction.html", {
+        "end_message": "Congratulations! Your auction has successfully ended!",
+        "win_message": "Congratulations! You have won this item!",
+        "listing_info": auction,
+        "bid_info": bid_info,
+        "comment_info": comment_info,
+        "number_of_watchers": number_of_watchers,
+        "number_of_watched_items": number_of_watched_items,
+        "user": user_object
     })
 
 def new_bid(request):
+    user = request.user.get_username()
+    number_of_watched_items = number_watched_items(user)
+
     if request.method == "POST":
         try:
             #Get User objects
-            user = request.user.get_username()
-            user = User.objects.get(username=user)
+            user_object = User.objects.get(username=user)
         
         except User.DoesNotExist:
             return render(request, "auctions/login.html", {
                 "message": "Must be Logged in to Place Bids"
             })
         
+        
         listing_id = request.POST["listing_id"]
         new_bid = request.POST["bid"]
         listing = Listings.objects.get(listing_id=listing_id)
 
+
         # We need to make the new bid into a float (originally a string)
         new_bid = float(new_bid)
 
-        
+        if user_object == listing.lister:
+            try:
+                return render(request, "auctions/auctions.html",{
+                    "listing_info": Listings.objects.get(listing_id=listing_id),
+                    "bid_info": Bids.objects.filter(listing=listing).latest('id'),
+                    "message": "Cannot bid on your own listings",
+                    "number_of_watched_items": number_of_watched_items
+                })
+            except ObjectDoesNotExist:
+                return render(request, "auctions/auctions.html",{
+                    "listing_info": Listings.objects.get(listing_id=listing_id),
+                    "bid_info": None,
+                    "message": "Cannot bid on your own listings",
+                    "number_of_watched_items": number_of_watched_items
+                })
 
         # We then need to compare the new bid passed to the current bid
         # If the new bid is greater update if not error
@@ -213,7 +270,8 @@ def new_bid(request):
             return render(request, "auctions/auctions.html", {
                 "listing_info": Listings.objects.get(listing_id=listing_id),
                 "bid_info": Bids.objects.filter(listing=listing).latest('id'),
-                "message": "New Bid MUST be larger than current bid"
+                "message": "New Bid MUST be larger than current bid",
+                "number_of_watched_items": number_of_watched_items
             })
 
         #Now that all of the bid info has been gotten, make a bid object then save it
@@ -234,12 +292,16 @@ def new_bid(request):
         return render(request, "auctions/auctions.html", {
             "listing_info": Listings.objects.get(listing_id=listing_id),
             "bid_info": Bids.objects.filter(listing=listing).latest('id'),
-            "comment_info": Comments.objects.filter(listing=listing)
+            "comment_info": Comments.objects.filter(listing=listing),
+            "number_of_watched_items": number_of_watched_items
             })
     
     
     return render(request, "auctions/auctions.html", {
-        "listing_info": Listings.objects.get(listing_id=listing_id)
+        "listing_info": Listings.objects.get(listing_id=listing_id),
+        "bid_info": Bids.objects.filter(listing=listing).latest('id'),
+        "comment_info": Comments.objects.filter(listing=listing),
+        "number_of_watched_items": number_of_watched_items
     })
 
 
@@ -343,7 +405,9 @@ def search(request):
     
 def user_profile(request, user):
     user_info = User.objects.get(username=user)
-    number_of_watched_items = number_watched_items(user)
+    
+    signed_in_user = request.user.get_username()
+    number_of_watched_items = number_watched_items(signed_in_user)
 
     return render(request, "auctions/user_profile.html", {
         "user_listings": Listings.objects.filter(lister=user_info.id),
@@ -351,11 +415,16 @@ def user_profile(request, user):
         "number_of_watched_items": number_of_watched_items
     })
 
+################################################
+# FIX WHERE USER PROFILE SHOWS ENDED AUCTIONS  #
+# WITHOUT SAYING THAT IT HAS ENDED             #
+################################################
+
 def new_comment(request):
+    user = request.user.get_username()
+
     if request.method == "POST":
-        print("Hello There")
         try: 
-            user = request.user.get_username()
             user_object = User.objects.get(username=user)
         except User.DoesNotExist:
             return render(request, "auctions/login.html", {
@@ -365,14 +434,15 @@ def new_comment(request):
         comment_content = request.POST["comment_content"]
         listing_id = request.POST["listing_id"]
         listing = Listings.objects.get(listing_id=listing_id)
-        print(comment_content)
+        number_of_watched_items = number_watched_items(user)
         
         if comment_content == "":
             return render(request, "auctions/auctions.html", {
                 "listing_info": Listings.objects.get(listing_id=listing_id),
                 "bid_info": Bids.objects.filter(listing=listing).latest('id'),
                 "comment_info": Comments.objects.filter(listing=listing),
-                "comment_message": "A Comment MUST be Longer than 0 Characters"
+                "comment_message": "A Comment MUST be Longer than 0 Characters",
+                "number_of_watched_items": number_of_watched_items
             })
         
         new_comment = Comments(commenter=user_object, comment=comment_content, listing=listing)
@@ -382,6 +452,22 @@ def new_comment(request):
             "listing_info": Listings.objects.get(listing_id=listing_id),
             "bid_info": Bids.objects.filter(listing=listing).latest('id'),
             "comment_info": Comments.objects.filter(listing=listing),
+            "number_of_watched_items": number_of_watched_items,
         })
 
     return HttpResponseRedirect(reverse("index"))
+
+################################################
+##########      HELPER FUNCTIONS      ##########
+################################################
+
+def number_watched_items(user):
+    number_of_watched_items = 0
+    try:
+        user = User.objects.get(username=user)
+        watchlist_object = Watchlist.objects.filter(watcher=user)
+        number_of_watched_items = watchlist_object.count()
+    except User.DoesNotExist:
+        number_of_watched_items = 0
+
+    return number_of_watched_items

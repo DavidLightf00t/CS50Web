@@ -11,6 +11,7 @@
     </div>
 
     {% for listings in auctions %}
+        {% if listings.active == True %}
             <div class="active_listings">
 
                 <a href="{% url 'listing' listings.listing_id %}" id="active_listing_link">
@@ -37,6 +38,7 @@
                 </a>
 
             </div>
+        {% endif %}
     {% endfor %}
     
 {% endblock %}
