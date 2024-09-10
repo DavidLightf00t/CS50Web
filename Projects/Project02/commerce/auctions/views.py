@@ -408,9 +408,20 @@ def user_profile(request, user):
     
     signed_in_user = request.user.get_username()
     number_of_watched_items = number_watched_items(signed_in_user)
+    listings = Listings.objects.filter(lister=user_info.id)
+    active_listings = []
+    ended_listings = []
+
+    for listing in listings:
+        if listing.active == True:
+            active_listings.append(listing)
+        else:
+            ended_listings.append(listing)
+
 
     return render(request, "auctions/user_profile.html", {
-        "user_listings": Listings.objects.filter(lister=user_info.id),
+        "active_listings": active_listings,
+        "ended_listings": ended_listings,
         "user_info": user_info,
         "number_of_watched_items": number_of_watched_items
     })
