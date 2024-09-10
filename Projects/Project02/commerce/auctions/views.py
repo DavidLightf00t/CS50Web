@@ -275,7 +275,7 @@ def new_bid(request):
             })
 
         #Now that all of the bid info has been gotten, make a bid object then save it
-        bid_object = Bids(bidder=user, bid_amount=new_bid, listing=listing)
+        bid_object = Bids(bidder=user_object, bid_amount=new_bid, listing=listing)
         bid_object.save()
 
         #TODO Make User info model work
