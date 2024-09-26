@@ -1,0 +1,120 @@
+{% extends 'auctions/layout.html' %}
+
+{% block body %}
+
+    <h2>Listing: {{ listing_info.title }} </h2>
+        {% if message %}
+            <div class="alert-info">
+                {{ message }}
+            </div>
+        {% endif %}
+
+        {% if end_auction == True %}
+
+            <div class="end_auction_btn" id="end_auction_btn">
+                <form action="{% url 'end_auction' listing_info.listing_id %}">
+                    <input type="submit" class="btn btn-primary" name="end_auction_btn" id="end_auction_btn" value="End Auction">
+                </form>
+            </div>
+
+        {% endif %}
+
+        
+    <div class="item_info">
+        <div class="main_listing_photo_wrapper">
+            <div id="main_listing_photo">
+                <img src="{{ listing_info.photo }}" alt="photo">
+            </div>
+        </div>
+        
+        <div class="item_description">
+            <h5>Description: </h5>
+            <p>{{ listing_info.description }}</p>
+        </div>
+
+        <div class="current_bid">
+            Current Bid: ${{ listing_info.starting_bid|floatformat:2  }}
+        </div>
+
+        <div class="bid_info">
+            {% if listing_info.number_of_bids == 0 %}
+                0 bids so far. No current bidder
+
+            {% else %}
+                {{ listing_info.number_of_bids }} bid(s) so far. 
+                <a href="{% url 'user_profile' bid_info.bidder %}">{{ bid_info.bidder }}</a> is the current bidder. 
+            {% endif %}
+
+             
+        </div>
+
+        {% if listing_info.active == True %}
+            <div class="new_bid">
+
+                <form action="{% url 'new_bid' %}" method="post">
+                    {% csrf_token %}
+                    <input type="text" name="listing_id" id="listing_id" hidden value="{{ listing_info.listing_id }}">
+                    <input type="number" name="bid" id="new_bid" placeholder="Bid" >
+                    <input type="submit" class="btn btn-primary" id="place_bid_btn" value="Place Bid">
+                </form>
+                    
+                <div class="new_watchlist_item">
+                    <form action="{% url 'watchlist' %}" method="post">
+                        {% csrf_token %}
+                        <input type="text" name="listing_id" id="listing_id" hidden value="{{ listing_info.listing_id }}">
+                        <input type="submit" class="btn-check" id="watchlist_btn" value="♡ Watchlist">
+                    </form>
+                </div>
+
+            </div>
+        {% endif%}
+
+        <hr>
+
+        <div class="item_info">
+            <p>Lister: <a href="{% url 'user_profile' listing_info.lister %}">{{ listing_info.lister }}</a></p>
+            <p>Category: {{ listing_info.category }}</p>
+            <p>Number of Watchers: {{ number_of_watchers }}</p>
+        </div>
+
+        <hr>
+
+        <div class="item_comments">
+            {% if comment_message %}
+                <div class="alert-info">
+                    {{ comment_message }}
+                </div>
+            {% endif %}
+
+            {% if listing_info.active == True %}
+                <h5>Leave a Comment:</h5>
+
+                <form action="{% url 'new_comment' %}" method="post">
+                    {% csrf_token %}
+                    <input type="text", name="listing_id", id="listing_id", hidden value="{{ listing_info.listing_id }}">
+                    <textarea name="comment_content" id="comment_content" placeholder="Comment here..."></textarea>
+                    <input type="submit" name="comment_submit_btn" value="Comment">
+                </form>
+
+                <br>
+            {% endif %}
+
+            <h5>Comments:</h5>
+
+            <hr>
+
+            {% for comments in comment_info %}
+                <a href="{% url 'user_profile' comments.commenter%}">{{comments.commenter}}</a> · {{ comments.time_of_comment }}
+                <div class="comment">
+                    {{ comments.comment }} 
+                </div>
+             
+                <hr>
+            {% endfor %}
+
+            
+        </div>
+
+    </div>
+{% endblock %}
+

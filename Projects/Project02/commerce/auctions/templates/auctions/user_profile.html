@@ -1,0 +1,67 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>{{ user_info.username }}'s Listings:</h2>
+
+    <hr>
+
+    <h4>Active Listings:</h4>
+    {% for listings in active_listings %}
+
+        <div class="active_listings">
+
+            <a href="{% url 'listing' listings.listing_id %}" id="active_listing_link">
+
+                <div class="index_item_photo" id="active_listing_photo">
+
+                    <img src="{{listings.photo}}">
+
+                </div>
+
+                <div id="active_listing_info">
+
+                        {{listings.title}}
+                    <br>
+                        Price: ${{listings.starting_bid|floatformat:2}}
+                    <br>
+                        Listed: {{listings.time_of_listing}}
+
+                </div>
+
+            </a>
+
+        </div>
+
+    {% endfor %}
+
+    <hr>
+
+    <h4>Ended Listings:</h4>
+    {% for listings in ended_listings %}
+
+        <div class="active_listings">
+
+            <a href="{% url 'listing' listings.listing_id %}" id="active_listing_link">
+
+                <div class="index_item_photo" id="active_listing_photo">
+
+                    <img src="{{listings.photo}}">
+
+                </div>
+
+                <div id="active_listing_info">
+
+                        {{listings.title}}
+                    <br>
+                        Price: ${{listings.starting_bid|floatformat:2}}
+                    <br>
+                        Listed: {{listings.time_of_listing}}
+
+                </div>
+
+            </a>
+
+        </div>
+
+    {% endfor %}
+{% endblock %}
