@@ -426,10 +426,6 @@ def user_profile(request, user):
         "number_of_watched_items": number_of_watched_items
     })
 
-################################################
-# FIX WHERE USER PROFILE SHOWS ENDED AUCTIONS  #
-# WITHOUT SAYING THAT IT HAS ENDED             #
-################################################
 
 def new_comment(request):
     user = request.user.get_username()
