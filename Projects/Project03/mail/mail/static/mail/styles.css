@@ -1,0 +1,39 @@
+textarea {
+    min-height: 400px;
+}
+
+.mail {
+    outline-style: solid;
+    outline-color: black;
+    outline-width: 1px;
+    background-color: white;
+
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+}
+
+.mail:hover {
+    background-color: lightgray;
+}
+
+.sender-wrapper-left {
+    color: black;
+    margin-right: 5px;
+    margin-left: 5px;
+}
+
+.subject-wrapper-left {
+    color: black;
+    margin-right: 5px;
+    margin-left: 5px;
+}
+
+.timestamp-wrapper-right{
+    margin-left: auto;
+    margin-right: 5px;
+}
+
+.timestamp{
+    color: hsl(0, 0%, 60%);
+}

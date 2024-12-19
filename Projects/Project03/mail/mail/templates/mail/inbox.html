@@ -1,0 +1,80 @@
+{% extends "mail/layout.html" %}
+{% load static %}
+
+{% block body %}
+    <h2>{{ request.user.email }}</h2>
+
+    <button class="btn btn-sm btn-outline-primary" id="inbox">Inbox</button>
+    <button class="btn btn-sm btn-outline-primary" id="compose">Compose</button>
+    <button class="btn btn-sm btn-outline-primary" id="sent">Sent</button>
+    <button class="btn btn-sm btn-outline-primary" id="archived">Archived</button>
+    <a class="btn btn-sm btn-outline-primary" href="{% url 'logout' %}">Log Out</a>
+    <hr>
+
+    <div id="emails-view">
+        <div id="mailbox-name"></div>
+
+        <div id="mail-container" class="main-container">
+            <div id="mail" class="mail">
+                <div id="sender-wrapper-left" class="sender-wrapper-left">
+                    <div id="sender" class="sender">
+                        <strong>EMAIL</strong>
+                    </div>
+                </div>
+                <div id="subject-wrapper-left" class="subject-wrapper-left">
+                    <div id="subject" class="subject">
+                        SUBJECT
+                    </div>
+                </div>
+                <div id="timestamp-wrapper-right" class="timestamp-wrapper-right">
+                    <div id="timestamp" class="timestamp">
+                        TIMESTAMP
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="mail-contents" class="mail-contents">
+            <div id="from-info" class="from-info">
+                <strong>From: </strong>
+            </div>
+            <div id="to-info" class="to-info">
+                <strong>To: </strong>
+            </div>
+            <div id="subject-info" class="subject-info">
+                <strong>Subject: </strong>
+            </div>
+            <div id="timestamp-info" class="timestamp-info">
+                <strong>Timestamp: </strong>
+            </div>
+
+            <button id="reply-button" class="btn btn-sm btn-outline-primary">Reply</button>
+            <hr>
+
+            <div id="body-info" class="body-info">
+                <p>Contents</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="compose-view">
+        <h3>New Email</h3>
+        <form id="compose-form">
+            <div class="form-group">
+                From: <input disabled class="form-control" value="{{ request.user.email }}">
+            </div>
+            <div class="form-group">
+                To: <input id="compose-recipients" class="form-control">
+            </div>
+            <div class="form-group">
+                <input class="form-control" id="compose-subject" placeholder="Subject">
+            </div>
+            <textarea class="form-control" id="compose-body" placeholder="Body"></textarea>
+            <button type="submit" id="button" class="btn btn-primary">Send Email</button>
+        </form>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'mail/inbox.js' %}"></script>
+{% endblock %}
