@@ -212,8 +212,13 @@ def end_auction(request, listing_id):
         user_object = User.objects.get(username=user)
     except User.DoesNotExist:
         user_object = None
-    
 
+
+    if auction.active == False and bid_info.bidder != None:
+        auction.winner = bid_info.bidder
+        auction.save()
+
+    
     return render(request, "auctions/end_auction.html", {
         "end_message": "Congratulations! Your auction has successfully ended!",
         "win_message": "Congratulations! You have won this item!",
@@ -222,7 +227,7 @@ def end_auction(request, listing_id):
         "comment_info": comment_info,
         "number_of_watchers": number_of_watchers,
         "number_of_watched_items": number_of_watched_items,
-        "user": user_object
+        "user": user_object,
     })
 
 def new_bid(request):
@@ -404,32 +409,48 @@ def search(request):
         })
     
 def user_profile(request, user):
-    user_info = User.objects.get(username=user)
+    current_user = request.user.get_username()
+
+    if user == current_user:
+        user_object = User.objects.get(username=current_user)
+
+    else:
+        user_object = User.objects.get(username=user)
     
     signed_in_user = request.user.get_username()
     number_of_watched_items = number_watched_items(signed_in_user)
-    listings = Listings.objects.filter(lister=user_info.id)
+    my_listings = Listings.objects.filter(lister=user_object.id)
+    ended_listings_list = Listings.objects.filter(active=False)
+    won_listings = []
     active_listings = []
     ended_listings = []
 
-    for listing in listings:
+    for listing in my_listings:
         if listing.active == True:
             active_listings.append(listing)
         else:
             ended_listings.append(listing)
 
+    for listing in ended_listings_list:
+        if listing.winner == user_object and user == current_user:
+            won_listings.append(listing)
+
 
     return render(request, "auctions/user_profile.html", {
         "active_listings": active_listings,
         "ended_listings": ended_listings,
-        "user_info": user_info,
+        "won_listings": won_listings,
+        "user_info": user_object,
         "number_of_watched_items": number_of_watched_items
     })
 
-################################################
-# FIX WHERE USER PROFILE SHOWS ENDED AUCTIONS  #
-# WITHOUT SAYING THAT IT HAS ENDED             #
-################################################
+
+    
+
+##################################################
+# Add a "My Profile" tab for users to see their  #
+# auctions along with their posted auctions      #
+##################################################
 
 def new_comment(request):
     user = request.user.get_username()
