@@ -42,10 +42,13 @@ function compose_email() {
     .then(result => {
         // Print result
         console.log(result);
+        
     })
     .catch(event => {
       console.error('Error:', error);
     });
+
+    load_mailbox('inbox');
     
   })
 }
@@ -72,13 +75,13 @@ function load_mailbox(mailbox) {
       mail_container.innerHTML = '';
 
       emails.forEach(email => {
-        if(email.read == true){
-          document.querySelector('#mail-container').style.background_color = 'lightgrey';  
-        }
-
         if(email.archived == false){
           const email_contents = document.createElement('div');
           email_contents.dataset.id = email.id;
+
+          if(email.read === true){
+            email_contents.style.backgroundColor = 'lightgrey';
+          }
 
           email_contents.innerHTML = `
           <div id="mail" class="mail">
@@ -128,7 +131,7 @@ function load_email_contents(email_id){
   document.querySelector('#mail-contents').style.display = 'block'
 
   console.log(email_id)
-  
+
   fetch(`/emails/${email_id}`, {
     method: 'PUT',
     body: JSON.stringify({

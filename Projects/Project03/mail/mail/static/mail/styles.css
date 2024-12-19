@@ -6,7 +6,6 @@ textarea {
     outline-style: solid;
     outline-color: black;
     outline-width: 1px;
-    background-color: white;
 
     display: flex;
     justify-content: space-between;
