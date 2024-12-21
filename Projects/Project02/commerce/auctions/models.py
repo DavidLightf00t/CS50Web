@@ -23,6 +23,7 @@ class Listings(models.Model):
     number_of_bids = models.IntegerField(default=0)
     time_of_listing = models.DateTimeField(auto_now_add=True)
     active = models.BooleanField(default=True, blank=False)
+    winner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="winner", blank=True, null=True)
 
     # How the object names itself in the admin dashboard
     def __str__(self):
