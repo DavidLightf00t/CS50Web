@@ -65,7 +65,7 @@ function load_mailbox(mailbox) {
   if(mailbox == "inbox"){
     console.log(mailbox == "inbox");
 
-    // Fetch emails
+    // Fetch inbox emails
     fetch('/emails/inbox')
     .then(response => response.json())
     .then(emails => {
@@ -117,20 +117,115 @@ function load_mailbox(mailbox) {
   if(mailbox == "sent"){
     const mail_container = document.querySelector('#mail-container');
     mail_container.innerHTML = '';
-    console.log("Mailbox", mailbox == "sent");
+    
+    console.log(mailbox == "inbox");
+
+    // Fetch inbox emails
+    fetch('/emails/sent')
+    .then(response => response.json())
+    .then(emails => {
+      // Print emails
+      // console.log(emails)
+      const mail_container = document.querySelector('#mail-container');
+      mail_container.innerHTML = '';
+
+      emails.forEach(email => {
+        if(email.archived === false){
+          const email_contents = document.createElement('div');
+          email_contents.dataset.id = email.id;
+
+          if(email.read === true){
+            email_contents.style.backgroundColor = 'lightgrey';
+          }
+
+          email_contents.innerHTML = `
+          <div id="mail" class="mail">
+            <div class="sender-wrapper-left">
+              <div class="sender"><strong>${email.sender}</strong></div>
+            </div>
+            <div class="subject-wrapper-left">
+              <div class="subject">${email.subject}</div>
+            </div>
+            <div class="timestamp-wrapper-right">
+              <div class="timestamp">${email.timestamp}</div>
+            </div>
+          </div>
+          `;
+
+          // When email is clicked on
+          email_contents.addEventListener('click', () => {
+            document.querySelector('#mail-container').innerHTML = '';
+            document.querySelector('#mailbox-name').innerHTML = '';
+
+            const email_id = email_contents.dataset.id;
+            load_email_contents(email_id);
+          })
+
+          mail_container.appendChild(email_contents)
+        }
+      });
+    })
+    .catch(error => console.error('Error:', error));
+
   }
 
   if(mailbox == "archive"){
     const mail_container = document.querySelector('#mail-container');
     mail_container.innerHTML = '';
-    console.log("Archived", mailbox == "archive");
+    console.log(mailbox == "inbox");
+
+    // Fetch inbox emails
+    fetch('/emails/archive')
+    .then(response => response.json())
+    .then(emails => {
+      // Print emails
+      // console.log(emails)
+      const mail_container = document.querySelector('#mail-container');
+      mail_container.innerHTML = '';
+
+      emails.forEach(email => {
+        if(email.archived == true){
+          const email_contents = document.createElement('div');
+          email_contents.dataset.id = email.id;
+
+          if(email.read === true){
+            email_contents.style.backgroundColor = 'lightgrey';
+          }
+
+          email_contents.innerHTML = `
+          <div id="mail" class="mail">
+            <div class="sender-wrapper-left">
+              <div class="sender"><strong>${email.sender}</strong></div>
+            </div>
+            <div class="subject-wrapper-left">
+              <div class="subject">${email.subject}</div>
+            </div>
+            <div class="timestamp-wrapper-right">
+              <div class="timestamp">${email.timestamp}</div>
+            </div>
+          </div>
+          `;
+
+          // When email is clicked on
+          email_contents.addEventListener('click', () => {
+            document.querySelector('#mail-container').innerHTML = '';
+            document.querySelector('#mailbox-name').innerHTML = '';
+
+            const email_id = email_contents.dataset.id;
+            load_email_contents(email_id);
+          })
+
+          mail_container.appendChild(email_contents)
+        }
+      });
+    })
+    .catch(error => console.error('Error:', error));
+
   }
 }
 
 function load_email_contents(email_id){
   document.querySelector('#mail-contents').style.display = 'block'
-
-  console.log(email_id)
 
   fetch(`/emails/${email_id}`, {
     method: 'PUT',
@@ -150,5 +245,23 @@ function load_email_contents(email_id){
       document.querySelector('#timestamp-info').innerHTML = `<strong>Timestamp: </strong> ${email.timestamp}`;
 
       document.querySelector('#body-info').innerHTML = `${email.body}`;
+
+      document.querySelector('#reply-button').addEventListener('click', () => {
+        compose_email();
+
+        document.querySelector('#compose-form').innerHTML = `
+            <div class="form-group">
+              From: <input disabled class="form-control" value="${email.sender}">
+            </div>
+            <div class="form-group">
+              To: <input disabled id="compose-recipients" class="form-control" value="${email.recipients}">
+            </div>
+            <div class="form-group">
+              <input class="form-control" id="compose-subject" placeholder="Subject" value="Re: ${email.subject}">
+            </div>
+            <textarea class="form-control" id="compose-body" placeholder="Body">On ${email.timestamp} ${email.sender} wrote: ${email.body} \n\n</textarea>
+            <button type="submit" id="button" class="btn btn-primary">Send Email</button>
+        `;
+      })
   });
 }
