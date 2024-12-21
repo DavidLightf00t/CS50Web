@@ -34,6 +34,10 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'newListing' %}">Create New Listing</a>
+                </li class="nav-item">
+                    <a class="nav-link" href="{% url 'user_profile' user.get_username %}">My Profile</a>
+                <li>
+
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'logout' %}">Log Out</a>

@@ -1,7 +1,49 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    <h2>{{ user_info.username }}'s Listings:</h2>
+    {% if user_info.username == user.get_username %}
+        <h2>Won Listings:</h2>
+
+        {% if not won_listings %}
+
+        <h6>No won auctions. Get bidding!</h6>
+
+        {% else %}
+
+            {% for listings in won_listings %}
+
+                <div class="active_listings">
+
+                    <a href="{% url 'listing' listings.listing_id %}" id="active_listing_link">
+
+                        <div class="index_item_photo" id="active_listing_photo">
+
+                            <img src="{{listings.photo}}">
+
+                        </div>
+
+                        <div id="active_listing_info">
+
+                                {{listings.title}}
+                            <br>
+                                Price: ${{listings.starting_bid|floatformat:2}}
+                            <br>
+                                Listed: {{listings.time_of_listing}}
+
+                        </div>
+
+                    </a>
+
+                </div>
+
+            {% endfor %}
+
+        {% endif %}
+
+        <h2>My Listings:</h2>
+    {% else %}
+        <h2>{{ user_info.username }}'s Listings:</h2>
+    {% endif %}
 
     <hr>
 
