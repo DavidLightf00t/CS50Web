@@ -75,7 +75,7 @@ function load_mailbox(mailbox) {
       mail_container.innerHTML = '';
 
       emails.forEach(email => {
-        if(email.archived == false){
+        if(email.archived === false){
           const email_contents = document.createElement('div');
           email_contents.dataset.id = email.id;
 
@@ -130,7 +130,7 @@ function load_mailbox(mailbox) {
       mail_container.innerHTML = '';
 
       emails.forEach(email => {
-        if(email.archived === false){
+        if(email.archived == false){
           const email_contents = document.createElement('div');
           email_contents.dataset.id = email.id;
 
@@ -169,7 +169,7 @@ function load_mailbox(mailbox) {
 
   }
 
-  if(mailbox == "archive"){
+  if(mailbox === "archive"){
     const mail_container = document.querySelector('#mail-container');
     mail_container.innerHTML = '';
     console.log(mailbox == "inbox");
@@ -246,6 +246,48 @@ function load_email_contents(email_id){
 
       document.querySelector('#body-info').innerHTML = `${email.body}`;
 
+      if(email.archived === true){
+        document.querySelector('#action-button-wrapper').innerHTML = `
+          <button id="reply-button" class="btn btn-sm btn-outline-primary">Reply</button>
+          <button id="archive-button" class="btn btn-sm btn-outline-primary">Unarchive</button>
+        `;
+      }
+
+      if(email.archived === false){
+        document.querySelector('#action-button-wrapper').innerHTML = `
+          <button id="reply-button" class="btn btn-sm btn-outline-primary">Reply</button>
+          <button id="archive-button" class="btn btn-sm btn-outline-primary">Archive</button>
+        `;
+      }
+
+      document.querySelector('#archive-button').addEventListener('click', async () => {
+        try {
+          if(email.archived === true){
+            await fetch(`/emails/${email_id}`, {
+              method: 'PUT',
+              body: JSON.stringify({
+                archived: false
+              })
+            })
+          }
+  
+          if(email.archived === false){
+            await fetch(`/emails/${email_id}`, {
+              method: 'PUT',
+              body: JSON.stringify({
+                archived: true
+              })
+            })
+          }
+  
+          load_mailbox('inbox');
+
+        }catch (error) {
+          console.error('Error updating email archive status: ', error);
+        }
+        
+      })
+
       document.querySelector('#reply-button').addEventListener('click', () => {
         compose_email();
 
@@ -254,7 +296,7 @@ function load_email_contents(email_id){
               From: <input disabled class="form-control" value="${email.sender}">
             </div>
             <div class="form-group">
-              To: <input disabled id="compose-recipients" class="form-control" value="${email.recipients}">
+              To: <input id="compose-recipients" class="form-control" value="${email.recipients}">
             </div>
             <div class="form-group">
               <input class="form-control" id="compose-subject" placeholder="Subject" value="Re: ${email.subject}">
